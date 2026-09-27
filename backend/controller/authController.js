@@ -2,6 +2,7 @@ import User from "../model/User.js";
 import Counter from "../model/Counter.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { sendVerificationCode } from "../middleware/Email.js";
 
 // Signup
 export const signup = async (req, res) => {
@@ -39,6 +40,8 @@ export const signup = async (req, res) => {
       { value: 0, user: user._id, name: user.name, email: user.email },
     ]);
 
+    await sendVerificationCode(user.email, verificationCode);
+    await user.save();
     res.status(200).json({ message: "User registered Successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error Signup", error });
