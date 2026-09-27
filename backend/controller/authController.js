@@ -2,7 +2,7 @@ import User from "../model/User.js";
 import Counter from "../model/Counter.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { sendVerificationCode } from "../middleware/Email.js";
+import { sendVerificationCode, sendWelcomeEmail } from "../middleware/Email.js";
 
 // Signup
 export const signup = async (req, res) => {
@@ -74,6 +74,7 @@ export const verifyEmail = async (req, res) => {
     user.verificationCode = undefined;
     user.verificationCodeExpires = undefined;
     await user.save();
+    sendWelcomeEmail(user.email, user.name);
     res.status(200).json({ message: "Email Verified Successfully" });
   } catch (error) {
     res.status(500).json({ message: "Verifiaction Failed", error });
