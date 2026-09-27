@@ -32,9 +32,6 @@ const Signup = () => {
 
     try {
       const response = await api.post("/auth/signup", form);
-
-      console.log(response.data);
-
       setMsg(response.data.message);
       setTimeout(() => {
         navigate("/verify");
