@@ -1,5 +1,5 @@
+import "dotenv/config";
 import cors from "cors";
-import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import express from "express";
 import authRoutes from "./Routes/authRoutes.js";
@@ -8,7 +8,6 @@ import counterRoutes from "./Routes/counterRoutes.js";
 import productRoutes from "./Routes/productRoutes.js";
 import cartRoutes from "./Routes/cartRoutes.js";
 
-dotenv.config();
 const app = express();
 
 app.use(express.json());
