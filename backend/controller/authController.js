@@ -17,8 +17,20 @@ export const signup = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000,
+    ).toString();
 
-    const user = await User.create({ name, email, password: hashPassword });
+    const verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+    const user = await User.create({
+      name,
+      email,
+      password: hashPassword,
+      isVerified: false,
+      verificationCode,
+      verificationCodeExpires,
+    });
 
     await Counter.insertMany([
       { value: 0, user: user._id, name: user.name, email: user.email },
