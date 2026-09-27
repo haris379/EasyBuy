@@ -24,9 +24,6 @@ const Verification = () => {
 
     try {
       const response = await api.post("/auth/verifyemail", form);
-
-      console.log(response.data);
-
       setMsg(response.data.message);
       setTimeout(() => {
         navigate("/");
