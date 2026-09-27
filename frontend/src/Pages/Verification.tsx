@@ -5,7 +5,7 @@ import api from "../api/axios";
 
 const Verification = () => {
   const [form, setForm] = useState({
-    code: undefined,
+    code: "",
   });
 
   const [msg, setMsg] = useState<string>("");
@@ -23,7 +23,7 @@ const Verification = () => {
     e.preventDefault();
 
     try {
-      const response = await api.post("/auth/signup", form);
+      const response = await api.post("/auth/verifyemail", form);
 
       console.log(response.data);
 
@@ -59,11 +59,11 @@ const Verification = () => {
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div>
               <input
-                id="password"
+                id="code"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                type="password"
+                type="text"
                 placeholder="Enter 6-digit OTP"
-                name="password"
+                name="code"
                 value={form.code}
                 onChange={handleChange}
                 required
