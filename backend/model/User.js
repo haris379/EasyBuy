@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema(
       default: false,
     },
     verificationCode: String,
-    verificationCodeExpire: Date,
+    verificationCodeExpires: Date,
   },
   {
     timestamps: true,
