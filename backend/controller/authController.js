@@ -94,6 +94,10 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "User dont have an account" });
     }
 
+    if (user.isVerified === false) {
+      return res.status(400).json({ message: "Your email is not verified" });
+    }
+
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
@@ -145,7 +149,7 @@ export const loginSpecificUser = async (req, res) => {
     });
 
     res.status(200).json({
-      message: "Login with ID Successfully",
+      message: "Login Successfull",
       token,
       user: {
         id: user._id,

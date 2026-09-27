@@ -8,7 +8,12 @@ const ProfileCard = () => {
   const loadUsers = async () => {
     try {
       const response = await api.get("/user/all-users");
-      setUsers(response.data.users || []);
+      const updatedUsersArray = response.data.users.filter((user: any) => {
+        return user.isVerified === true;
+      });
+
+      // setUsers(response.data.users || []);
+      setUsers(updatedUsersArray || []);
     } catch (error) {
       console.error("Error Getting Users");
     }
