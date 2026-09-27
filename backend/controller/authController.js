@@ -9,7 +9,7 @@ export const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
-      return res.json({ message: "Input All Fields" });
+      return res.status(400).json({ message: "Input All Fields" });
     }
 
     const userExist = await User.findOne({ email });
@@ -45,6 +45,37 @@ export const signup = async (req, res) => {
     res.status(200).json({ message: "User registered Successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error Signup", error });
+  }
+};
+
+export const verifyEmail = async (req, res) => {
+  try {
+    const { code } = req.body;
+    if (!code) {
+      return res.status(400).json({ message: "Please Enter code" });
+    }
+
+    const user = await User.findOne({ verificationCode: code });
+    if (!user) {
+      return res.status(400).json({ message: "Incorrect Code" });
+    }
+
+    if (
+      !user.verificationCodeExpires ||
+      user.verificationCodeExpires < new Date()
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Verification Code expired",
+      });
+    }
+
+    user.isVerified = true;
+    user.verificationCode = undefined;
+    user.verificationCodeExpires = undefined;
+    await user.save();
+  } catch (error) {
+    res.status(500).json({ message: "Verifiaction Failed", error });
   }
 };
 
