@@ -1,4 +1,5 @@
 import { Verification_Email_Template } from "../template/codeTemplate.js";
+import { Welcome_Email_Template } from "../template/welcomeTemplate.js";
 import { transporter } from "./emailConfig.js";
 
 export const sendVerificationCode = async (email, verificationCode) => {
@@ -27,7 +28,7 @@ export const sendWelcomeEmail = async (email, name) => {
       to: email, // list of recipients
       subject: "Verify Your email", // subject line
       text: "Verify Your email", // plain text body
-      html: Verification_Email_Template.replace("{name}", name), // HTML body
+      html: Welcome_Email_Template.replace("{name}", name), // HTML body
     });
 
     console.log("Verification Code Send Successfully");
