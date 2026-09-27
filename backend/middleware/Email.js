@@ -7,8 +7,8 @@ export const sendVerificationCode = async (email, verificationCode) => {
     await transporter.sendMail({
       from: '"EasyBuy Team" <infoeasybuystore0@gmail.com>', // sender address
       to: email, // list of recipients
-      subject: "Verify Your email", // subject line
-      text: "Verify Your email", // plain text body
+      subject: "Verify Your EasyBuy Email", // subject line
+      text: "Your EasyBuy verification code is required to verify your email address.", // plain text body
       html: Verification_Email_Template.replace(
         "{verificationCode}",
         verificationCode,
@@ -26,8 +26,8 @@ export const sendWelcomeEmail = async (email, name) => {
     await transporter.sendMail({
       from: '"EasyBuy Team" <infoeasybuystore0@gmail.com>', // sender address
       to: email, // list of recipients
-      subject: "Verify Your email", // subject line
-      text: "Verify Your email", // plain text body
+      subject: "Welcome to EasyBuy! 🎉", // subject line
+      text: "Welcome to EasyBuy! Your account has been successfully verified.", // plain text body
       html: Welcome_Email_Template.replace("{name}", name), // HTML body
     });
 
