@@ -37,7 +37,7 @@ const Signup = () => {
 
       setMsg(response.data.message);
       setTimeout(() => {
-        navigate("/");
+        navigate("/verify");
       }, 500);
     } catch (error: any) {
       console.log(error);

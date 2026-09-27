@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 const Verification = () => {
@@ -62,7 +62,7 @@ const Verification = () => {
                 id="password"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Enter 6-digit OTP"
                 name="password"
                 value={form.code}
                 onChange={handleChange}
