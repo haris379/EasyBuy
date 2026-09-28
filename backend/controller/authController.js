@@ -47,8 +47,8 @@ export const signup = async (req, res) => {
     res.status(500).json({ message: "Error Signup", error });
   }
 };
-
-export const verifyEmail = async (req, res) => {
+// VerifyEmail on Signup
+export const verifyEmailOnSignup = async (req, res) => {
   try {
     const { code } = req.body;
     if (!code) {
@@ -80,6 +80,9 @@ export const verifyEmail = async (req, res) => {
     res.status(500).json({ message: "Verifiaction Failed", error });
   }
 };
+
+// VerifyEmail
+
 
 // Login
 export const login = async (req, res) => {

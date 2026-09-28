@@ -3,13 +3,13 @@ import {
   signup,
   login,
   loginSpecificUser,
-  verifyEmail,
+  verifyEmailOnSignup,
 } from "../controller/authController.js";
 
 const router = express.Router();
 
 router.post("/signup", signup);
-router.post("/verifyemail", verifyEmail);
+router.post("/verifyemail", verifyEmailOnSignup);
 router.post("/login", login);
 router.post("/login/:id", loginSpecificUser);
 
