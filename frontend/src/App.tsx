@@ -12,6 +12,7 @@ import Login from "./Pages/Login.tsx";
 import Verification from "./Pages/Verification.tsx";
 import AdminRoute from "./components/AdminRoutes.tsx";
 import ResendCode from "./Pages/ResendCode.tsx";
+import OrderPlaced from "./Pages/OrderPlaced.tsx";
 
 const App = () => {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ const App = () => {
 
         <Route path="/home/" element={<Home />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/orderPlaced" element={<OrderPlaced />} />
       </Routes>
     </>
   );
