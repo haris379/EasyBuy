@@ -21,7 +21,6 @@ const AdminDashBoard = () => {
   const handleDelete = async (id: any) => {
     try {
       await api.delete(`/product/delete/${id}`);
-      alert("Product Deleted Successfully");
       loadProducts();
     } catch (error: any) {
       console.log(error.response?.data?.message || "An error occurred");
