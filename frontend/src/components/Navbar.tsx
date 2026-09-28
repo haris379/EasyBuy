@@ -60,7 +60,6 @@ const Navbar = ({ onLogout }: NavbarProps) => {
     <nav className="sticky top-0 z-50 w-full bg-gray-100 shadow-sm">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex min-h-[70px] flex-col justify-center gap-3 py-3 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:py-2">
-          {/* Logo + Welcome */}
           <div className="flex flex-col items-center lg:items-start">
             <Link
               to="/"
@@ -74,45 +73,45 @@ const Navbar = ({ onLogout }: NavbarProps) => {
               </h2>
             )}
           </div>
-          {/* Navigation */}
+
           <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:w-auto lg:justify-end">
-            {/* Cart */}
-            <Link
-              to="/cart"
-              aria-label="Shopping cart"
-              className="relative flex h-10 w-10 items-center justify-center rounded-md text-lg transition hover:bg-gray-200"
-            >
-              🛒
-              {cartCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-volt px-1 text-[10px] font-bold text-black">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-            {/* Home */}
-            <Link
-              to="/"
-              className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
-            >
-              Home
-            </Link>
-            {/* Admin */}
-            {role === "admin" && (
+            {role === "admin" ? (
               <Link
                 to="/admin/products/"
                 className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
               >
                 Admin Dashboard
               </Link>
+            ) : (
+              <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:w-auto lg:justify-end">
+                <Link
+                  to="/cart"
+                  aria-label="Shopping cart"
+                  className="relative flex h-10 w-10 items-center justify-center rounded-md text-lg transition hover:bg-gray-200"
+                >
+                  🛒
+                  {cartCount > 0 && (
+                    <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-volt px-1 text-[10px] font-bold text-black">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
+                <Link
+                  to="/"
+                  className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
+                >
+                  Home
+                </Link>
+
+                <Link
+                  to="/counter-app"
+                  className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
+                >
+                  Counter App
+                </Link>
+              </div>
             )}
-            {/* Counter */}
-            <Link
-              to="/counter-app"
-              className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
-            >
-              Counter App
-            </Link>
-            {/* Authentication */}
+
             {userId ? (
               <button
                 onClick={logout}
