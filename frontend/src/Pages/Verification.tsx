@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 const Verification = () => {
@@ -74,6 +74,16 @@ const Verification = () => {
               Verify
             </button>
           </form>
+          <div className="text-center mt-2 text-sm text-gray-600">
+            <span>Lost yout OTP? </span>
+
+            <Link
+              to="/re-send-otp"
+              className="text-blue-600 hover:text-blue-700 font-semibold"
+            >
+              Verify
+            </Link>
+          </div>
         </div>
       </div>
     </div>
