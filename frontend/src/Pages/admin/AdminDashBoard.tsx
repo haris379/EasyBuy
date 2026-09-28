@@ -77,7 +77,11 @@ const AdminDashBoard = () => {
                         {product.price}
                       </td>
 
-                      <td className="px-4 py-3">{product.stock}</td>
+                      <td className="px-4 py-3">
+                        {product.stock < 1
+                          ? handleDelete(product._id)
+                          : product.stock}
+                      </td>
 
                       <td className="px-4 py-3 text-right whitespace-nowrap">
                         <Link
