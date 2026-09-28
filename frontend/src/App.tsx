@@ -10,6 +10,7 @@ import CounterApp from "./Pages/CounterApp.tsx";
 import Navbar from "./components/Navbar.tsx";
 import Login from "./Pages/Login.tsx";
 import Verification from "./Pages/Verification.tsx";
+import AdminRoute from "./components/AdminRoutes.tsx";
 
 const App = () => {
   const navigate = useNavigate();
@@ -36,9 +37,11 @@ const App = () => {
 
         <Route path="/counter-app" element={<CounterApp />} />
 
-        <Route path="/admin/products/" element={<AdminDashBoard />} />
-        <Route path="/admin/products/add-product" element={<AddProduct />} />
-        <Route path="/admin/products/update/:id" element={<EditProduct />} />
+        <Route element={<AdminRoute />}>
+          <Route path="/admin/products/" element={<AdminDashBoard />} />
+          <Route path="/admin/products/add-product" element={<AddProduct />} />
+          <Route path="/admin/products/update/:id" element={<EditProduct />} />
+        </Route>
 
         <Route path="/home/" element={<Home />} />
         <Route path="/cart" element={<Cart />} />
