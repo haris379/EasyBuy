@@ -75,14 +75,44 @@ export const verifyEmailOnSignup = async (req, res) => {
     user.verificationCodeExpires = undefined;
     sendWelcomeEmail(user.email, user.name);
     await user.save();
-    res.status(200).json({ message: "Email Verified Successfully" });
+    res.status(200).json({ message: "Email verified Successfully" });
   } catch (error) {
     res.status(500).json({ message: "Verifiaction Failed", error });
   }
 };
 
 // VerifyEmail
+export const reSendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Please Enter email" });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "You dont have account." });
+    }
+    if (user.isVerified === true) {
+      return res
+        .status(403)
+        .json({ message: "Your account is already verified." });
+    }
 
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000,
+    ).toString();
+
+    const verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000);
+    user.verificationCode = verificationCode;
+    user.verificationCodeExpires = verificationCodeExpires;
+
+    await sendVerificationCode(user.email, verificationCode);
+    await user.save();
+    res
+      .status(200)
+      .json({ message: "Verification code has been sent to your email" });
+  } catch (error) {}
+};
 
 // Login
 export const login = async (req, res) => {
