@@ -8,6 +8,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const [userName, setUserName] = useState(localStorage.getItem("userName"));
   const [cartCount, setCartCount] = useState(0);
+  const role = localStorage.getItem("role");
   const navigate = useNavigate();
   useEffect(() => {
     loadCart();
@@ -47,6 +48,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("userName");
+    localStorage.removeItem("role");
     setUserId(null);
     setUserName(null);
     setCartCount(0);
@@ -95,12 +97,14 @@ const Navbar = ({ onLogout }: NavbarProps) => {
               Home
             </Link>
             {/* Admin */}
-            <Link
-              to="/admin/products/"
-              className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
-            >
-              Admin Dashboard
-            </Link>
+            {role === "admin" && (
+              <Link
+                to="/admin/products/"
+                className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
+              >
+                Admin Dashboard
+              </Link>
+            )}
             {/* Counter */}
             <Link
               to="/counter-app"
