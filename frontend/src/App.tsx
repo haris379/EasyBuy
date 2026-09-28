@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar.tsx";
 import Login from "./Pages/Login.tsx";
 import Verification from "./Pages/Verification.tsx";
 import AdminRoute from "./components/AdminRoutes.tsx";
+import ResendCode from "./Pages/ResendCode.tsx";
 
 const App = () => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify" element={<Verification />} />
+        <Route path="/re-send-otp" element={<ResendCode />} />
 
         <Route path="/login-id/:id" element={<LoginWithID />} />
         <Route path="/login" element={<Login />} />
