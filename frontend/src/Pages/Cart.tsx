@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
+  const [msg, setMsg] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const loadCart = async () => {
     try {
       const userId = localStorage.getItem("userId");
+      if (!userId) {
+        setMsg("Please login first");
+        return;
+      }
       const response = await api.get(`/cart/${userId}`);
 
-      const items = response.data.cart.items;
+      const items = response.data.cart.items || [];
       setCart(items);
 
       const totalAmount = items.reduce((total: any, item: any) => {
@@ -57,6 +64,21 @@ const Cart = () => {
       loadCart();
     } catch (error) {}
   };
+  const handleOrder = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await api.post(`/order/placeOrder`, { userId });
+      setMsg(response.data.message);
+      setTimeout(() => {
+        setMsg("");
+      }, 1000);
+      setTimeout(() => {
+        navigate("/orderPlaced");
+      }, 250);
+    } catch (error: any) {
+      setMsg(error.response?.data?.message || "An error occurred");
+    }
+  };
   useEffect(() => {
     loadCart();
   }, [total]);
@@ -65,15 +87,13 @@ const Cart = () => {
       <div className="min-h-[70vh]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
           <div className="mb-8">
-            <Link
-              to="/"
-              className="flex items-center gap-2 text-sm text-ink-soft hover:text-navy mb-4"
-            >
-              Back to Home
-            </Link>
             <h1 className="font-bold text-2xl text-ink">Your Cart</h1>
           </div>
-
+          {msg && (
+            <div className="mb-5 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-center text-sm text-blue-700">
+              {msg}
+            </div>
+          )}
           {cart.length === 0 ? (
             <div className="card py-12 text-center">
               <p className="text-ink-soft">No Item in your cart</p>
@@ -140,8 +160,16 @@ const Cart = () => {
           )}
           <div className="">
             <h2>
-              Total Amount : <span>{total}</span>
+              <strong>Total Amount</strong> : <span>{total}</span>
             </h2>
+          </div>
+          <div className="flex justify-center">
+            <button
+              onClick={() => handleOrder()}
+              className="w-1/2 py-3 m-5 bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold rounded-lg transition duration-200 cursor-pointer"
+            >
+              Place Order
+            </button>
           </div>
         </div>
       </div>
