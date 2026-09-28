@@ -9,10 +9,9 @@ const ProfileCard = () => {
     try {
       const response = await api.get("/user/all-users");
       const updatedUsersArray = response.data.users.filter((user: any) => {
-        return user.isVerified === true;
+        return user.isVerified === true && user.role === "user";
       });
 
-      // setUsers(response.data.users || []);
       setUsers(updatedUsersArray || []);
     } catch (error) {
       console.error("Error Getting Users");
