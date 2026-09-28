@@ -127,6 +127,17 @@ const LoginWithID = () => {
               Signup
             </Link>
           </div>
+
+          <div className="text-center mt-2 text-sm text-gray-600">
+            <span>Account not Verify? </span>
+
+            <Link
+              to="/re-send-otp"
+              className="text-blue-600 hover:text-blue-700 font-semibold"
+            >
+              Verify
+            </Link>
+          </div>
         </div>
       </div>
     </div>
