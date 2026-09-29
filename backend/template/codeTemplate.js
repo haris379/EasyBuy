@@ -15,6 +15,30 @@ export const Verification_Email_Template = `
   color: #1f2937;
 ">
 
+<body style="
+  margin: 0;
+  padding: 0;
+  background-color: #f5f7fa;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #1f2937;
+">
+
+  <!-- Email Preview Text -->
+  <div style="
+    display: none;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    color: transparent;
+    visibility: hidden;
+    font-size: 1px;
+    line-height: 1px;
+  ">
+    Your EasyBuy verification code is ready. Verify your email address to complete your account setup.
+  </div>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding: 40px 15px;">
+
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding: 40px 15px;">
     <tr>
       <td align="center">
