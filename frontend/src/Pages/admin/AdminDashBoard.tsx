@@ -50,7 +50,7 @@ const AdminDashBoard = () => {
             </div>
 
             <div className="card overflow-x-auto">
-              <table className="w-full min-w-[640px] border border-black text-sm">
+              <table className="w-full min-w-full border border-black text-sm">
                 <thead>
                   <tr className="bg-navy text-blacl text-left">
                     <th className="px-4 py-3 font-medium">Title</th>
