@@ -125,11 +125,11 @@ const Cart = () => {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 border border-line rounded-lg px-2 py-1 w-fit">
+                      <div className="flex items-center gap-3 border border-line rounded-lg px-2 py-1 w-fit bg-gray-200">
                         <button
                           type="button"
                           onClick={() => decreaseQuantity(item.productId._id)}
-                          className="w-8 h-8 flex items-center justify-center text-lg text-ink-soft hover:text-navy transition-colors"
+                          className="w-8 h-8 flex items-center justify-center text-lg text-ink-soft bg-gray-300 hover:text-navy transition-colors rounded-md  hover:bg-gray-500 hover:text-white"
                         >
                           -
                         </button>
@@ -139,7 +139,7 @@ const Cart = () => {
                         <button
                           type="button"
                           onClick={() => increaseQuantity(item.productId._id)}
-                          className="w-8 h-8 flex items-center justify-center text-lg text-ink-soft hover:text-navy transition-colors"
+                          className="w-8 h-8 flex items-center justify-center text-lg text-ink-soft bg-gray-300 hover:text-navy transition-colors rounded-md  hover:bg-gray-500 hover:text-white"
                         >
                           +
                         </button>
