@@ -1,20 +1,4 @@
-export const Welcome_Email_Template = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to EasyBuy</title>
-</head>
-
-<body style="
-  margin: 0;
-  padding: 0;
-  background-color: #f5f7fa;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #1f2937;
-">
-
+export const Welcome_Email_Template = ` <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Welcome to EasyBuy</title> </head> <body style=" margin: 0; padding: 0; background-color: #f5f7fa; font-family: Arial, Helvetica, sans-serif; color: #1f2937; "> <!-- Hidden Preheader --> <div style=" display: none; max-height: 0; overflow: hidden; opacity: 0; color: transparent; font-size: 1px; line-height: 1px; "> Welcome to EasyBuy! Your account has been successfully verified. </div>
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding: 40px 15px;">
     <tr>
       <td align="center">
