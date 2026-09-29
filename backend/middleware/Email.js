@@ -93,7 +93,7 @@ export const sendOrderEmail = async (
       from: '"EasyBuy Team" <infoeasybuystore0@gmail.com>', // sender address
       to: email, // list of recipients
       subject: "Order Confirmation - EasyBuy 🎉", // subject line
-      text: "Your order", // plain text body
+      text: `Your EasyBuy order has been confirmed. Thank you for shopping with us!`, // plain text body
       html: Order_Confirmation_Email_Template.replace("{name}", name)
         .replace("{orderId}", orderId)
         .replace("{orderItems}", items)
