@@ -4,13 +4,11 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 const ResendCode = () => {
+  const [msg, setMsg] = useState<string>("");
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
   });
-
-  const [msg, setMsg] = useState<string>("");
-
-  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({

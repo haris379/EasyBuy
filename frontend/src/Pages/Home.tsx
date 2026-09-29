@@ -97,10 +97,10 @@ const Home = () => {
       {products.length === 0 && (
         <p className="text-center">No Products found</p>
       )}
-      <div className=" grid grid-cols-1 sm:grid-cols-1 justify-center md:grid-cols-4 gap-2 m-7">
+      <div className="grid grid-cols-1 justify-items-center gap-4 m-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {products.map((product: any) => (
           <div
-            className="bg-gray-100 w-max h-80 rounded-xl border flex flex-col items-center"
+            className="bg-gray-100 w-full max-w-xs h-80 rounded-xl border flex flex-col items-center"
             key={product._id}
           >
             <img

@@ -48,21 +48,18 @@ const Login = () => {
   return (
     <div className="min-h-[calc(100vh-64px)] bg-gray-50 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
-        {/* Signup Card */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-          {/* Heading */}
+          {" "}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-800">Login</h1>
 
             <p className="text-gray-500 mt-2">Login to get started</p>
           </div>
-
           {msg && (
             <div className="mb-5 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-center text-sm text-blue-700">
               {msg}
             </div>
           )}
-
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div>
               <label
@@ -84,7 +81,6 @@ const Login = () => {
               />
             </div>
 
-            {/* Password */}
             <div>
               <label
                 htmlFor="password"
@@ -105,7 +101,6 @@ const Login = () => {
               />
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
@@ -113,8 +108,6 @@ const Login = () => {
               Login
             </button>
           </form>
-
-          {/* Signup */}
           <div className="text-center mt-6 text-sm text-gray-600">
             <span>Don't have an account? </span>
 
@@ -125,7 +118,6 @@ const Login = () => {
               Signup
             </Link>
           </div>
-
           <div className="text-center mt-2 text-sm text-gray-600">
             <span>Account not Verify? </span>
 

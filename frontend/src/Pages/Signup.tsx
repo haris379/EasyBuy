@@ -10,15 +10,13 @@ interface FormObj {
 }
 
 const Signup = () => {
+  const [msg, setMsg] = useState<string>("");
+  const navigate = useNavigate();
   const [form, setForm] = useState<FormObj>({
     name: "",
     email: "",
     password: "",
   });
-
-  const [msg, setMsg] = useState<string>("");
-
-  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({

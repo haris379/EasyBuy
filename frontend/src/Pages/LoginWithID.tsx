@@ -11,13 +11,12 @@ const LoginWithID = () => {
   const { id } = useParams();
   const { state } = useLocation();
   const { name, email } = state;
-
+  const [msg, setMsg] = useState<string>("");
+  const navigate = useNavigate();
   const [form, setForm] = useState<FormObj>({
     password: "",
   });
-  const [msg, setMsg] = useState<string>("");
 
-  const navigate = useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
@@ -50,9 +49,7 @@ const LoginWithID = () => {
   return (
     <div className="min-h-[calc(100vh-64px)] bg-gray-50 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
-        {/* Signup Card */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-          {/* Heading */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-800">Welcome {name}</h1>
 
@@ -86,7 +83,6 @@ const LoginWithID = () => {
               />
             </div>
 
-            {/* Password */}
             <div>
               <label
                 htmlFor="password"
@@ -107,7 +103,6 @@ const LoginWithID = () => {
               />
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
@@ -116,7 +111,6 @@ const LoginWithID = () => {
             </button>
           </form>
 
-          {/* Signup */}
           <div className="text-center mt-6 text-sm text-gray-600">
             <span>Don't have an account? </span>
 
