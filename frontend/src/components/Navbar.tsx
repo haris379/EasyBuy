@@ -59,7 +59,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
   return (
     <nav className="sticky top-0 z-50 w-full bg-gray-100 shadow-sm">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex min-h-[70px] flex-col justify-center gap-3 py-3 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:py-2">
+        <div className="flex min-h-18 flex-col justify-center gap-3 py-3 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:py-2">
           <div className="flex flex-col items-center lg:items-start">
             <Link
               to="/"
@@ -83,7 +83,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
                 Admin Dashboard
               </Link>
             ) : (
-              <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:w-auto lg:justify-end">
+              <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-end">
                 <Link
                   to="/cart"
                   aria-label="Shopping cart"
