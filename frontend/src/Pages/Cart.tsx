@@ -68,6 +68,10 @@ const Cart = () => {
     try {
       const userId = localStorage.getItem("userId");
       const response = await api.post(`/order/placeOrder`, { userId });
+
+      window.dispatchEvent(new Event("cartUpdated"));
+      setCart([]);
+      setTotal(0);
       setMsg(response.data.message);
       setTimeout(() => {
         setMsg("");
@@ -81,7 +85,7 @@ const Cart = () => {
   };
   useEffect(() => {
     loadCart();
-  }, [total]);
+  }, []);
   return (
     <>
       <div className="min-h-[70vh]">
