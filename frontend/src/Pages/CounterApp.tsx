@@ -102,6 +102,11 @@ const CounterApp = () => {
 
   const handleAdd = async () => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please login to continue");
+        return;
+      }
       await api.post("/counter/add");
 
       const response = await api.get("/counter");
@@ -112,10 +117,6 @@ const CounterApp = () => {
 
       setCounters(counters);
     } catch (error: any) {
-      if (error.response?.status === 401) {
-        alert("Please login to continue");
-        return;
-      }
       console.error("Error adding counter:", error);
     }
   };
