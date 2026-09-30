@@ -8,25 +8,24 @@ const Cart = () => {
   const [total, setTotal] = useState(0);
   const [msg, setMsg] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-
   const navigate = useNavigate();
 
+  const calculateTotal = (items: any[]) => {
+    return items.reduce((total: any, item: any) => {
+      return total + item.quantity * item.productId.price;
+    }, 0);
+  };
   const loadCart = async () => {
     try {
       const userId = localStorage.getItem("userId");
       if (!userId) {
-        setMsg("Please login first");
+        alert("Please login first");
         return;
       }
       const response = await api.get(`/cart/${userId}`);
-
       const items = response.data.cart.items || [];
       setCart(items);
-
-      const totalAmount = items.reduce((total: any, item: any) => {
-        return total + item.quantity * item.productId.price;
-      }, 0);
-      setTotal(totalAmount);
+      setTotal(calculateTotal(items));
     } catch (error: any) {
       console.log(error);
     } finally {
@@ -37,13 +36,10 @@ const Cart = () => {
   const removeItem = async (productId: any) => {
     try {
       const userId = localStorage.getItem("userId");
-
       const response = await api.post("/cart/removeItem", {
         userId,
         productId,
       });
-      console.log(response.data);
-
       setCart(response.data.cart?.items || []);
       loadCart();
     } catch (error: any) {
@@ -57,36 +53,50 @@ const Cart = () => {
       const response = await api.put(`/cart/increase/${productId}`, { userId });
       setCart(response.data.cart.items);
       loadCart();
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
   const decreaseQuantity = async (productId: any) => {
     try {
       const userId = localStorage.getItem("userId");
       const response = await api.put(`/cart/decrease/${productId}`, { userId });
       setCart(response.data.cart.items);
-
       loadCart();
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
   const handleOrder = async () => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please login first");
+      return;
+    }
+    if (cart.length === 0) {
+      return;
+    }
     try {
+      setLoading(true);
       const userId = localStorage.getItem("userId");
       const response = await api.post(`/order/placeOrder`, { userId });
 
+      setMsg(response.data.message);
       window.dispatchEvent(new Event("cartUpdated"));
+
       setCart([]);
       setTotal(0);
-      setMsg(response.data.message);
-      setTimeout(() => {
-        setMsg("");
-      }, 1000);
+      setLoading(true);
+
       setTimeout(() => {
         navigate("/orderPlaced");
-      }, 250);
+      }, 1000);
     } catch (error: any) {
-      setMsg(error.response?.data?.message || "An error occurred");
+      console.error(error.response?.data?.message || "An error occurred");
+      setLoading(false);
     }
   };
+
   useEffect(() => {
     loadCart();
   }, []);
@@ -169,82 +179,19 @@ const Cart = () => {
                   </div>
                 );
               })}
+              <div className="">
+                <h2>
+                  <strong>Total Amount</strong> : <span>{total}</span>
+                </h2>
+              </div>
             </div>
           )}
 
-          {/* {cart.length === 0 ? (
-            <div className="card py-12 text-center">
-              <p className="text-ink-soft">Your cart is empty</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {cart.map((item: any) => {
-                if (!item.productId) return null;
-                return (
-                  <div key={item._id} className="card p-4 sm:p-5">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-5">
-                      <div className="flex items-center gap-4 flex-1 min-w-0">
-                        <img
-                          src={item.productId.image}
-                          alt={item.productId.title}
-                          className="w-20 h-20 object-cover rounded-lg bg-paper shrink-0"
-                        />
-                        <div className="min-w-0">
-                          <h2 className="font-semibold text-ink truncate">
-                            {item.productId.title}
-                          </h2>
-                          <p className="text-sm text-ink-soft mt-1">
-                            {item.productId.price}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-3 border border-line rounded-lg px-2 py-1 w-fit bg-gray-200">
-                        <button
-                          type="button"
-                          onClick={() => decreaseQuantity(item.productId._id)}
-                          className="w-8 h-8 flex items-center justify-center text-lg text-ink-soft bg-gray-300 hover:text-navy transition-colors rounded-md  hover:bg-gray-500 hover:text-white"
-                        >
-                          -
-                        </button>
-                        <span className="w-6 text-sm text-center text-black">
-                          {item.quantity}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => increaseQuantity(item.productId._id)}
-                          className="w-8 h-8 flex items-center justify-center text-lg text-ink-soft bg-gray-300 hover:text-navy transition-colors rounded-md  hover:bg-gray-500 hover:text-white"
-                        >
-                          +
-                        </button>
-                      </div>
-
-                      <div className="sm:w-28 text-left sm:text-right">
-                        <p className="text-sm font-semibold text-ink">
-                          Rs. {item.quantity * item.productId.price}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => removeItem(item.productId._id)}
-                        className="text-sm bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors w-full sm:w-auto"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )} */}
-          <div className="">
-            <h2>
-              <strong>Total Amount</strong> : <span>{total}</span>
-            </h2>
-          </div>
           <div className="flex justify-center">
             <button
               onClick={() => handleOrder()}
-              className="w-1/2 py-3 m-5 bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold rounded-lg transition duration-200 cursor-pointer"
+              disabled={cart.length === 0 || loading}
+              className="w-1/2 py-3 m-5 bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold rounded-lg  duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               Place Order
             </button>
