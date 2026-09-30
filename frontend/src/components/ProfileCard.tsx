@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/axios";
+import LoadingBar from "./LoadingBar";
 
 const ProfileCard = () => {
   const [users, setUsers] = useState([]);
@@ -28,9 +29,11 @@ const ProfileCard = () => {
   return (
     <>
       {loading ? (
-        users.length === 0 && (
-          <p className="font-bold text-center m-2">No User</p>
-        )
+        <div className="text-center flex justify-center items-center">
+          <LoadingBar />
+        </div>
+      ) : users.length === 0 ? (
+        <p className="font-bold text-center m-2">No User</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 m-3">
           {users.map((user: any) => (
