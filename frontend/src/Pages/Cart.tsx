@@ -6,7 +6,7 @@ import LoadingBar from "../components/LoadingBar";
 const Cart = () => {
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
-  const [msg, setMsg] = useState<string>("");
+
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
@@ -79,9 +79,8 @@ const Cart = () => {
     try {
       setLoading(true);
       const userId = localStorage.getItem("userId");
-      const response = await api.post(`/order/placeOrder`, { userId });
+      await api.post(`/order/placeOrder`, { userId });
 
-      setMsg(response.data.message);
       window.dispatchEvent(new Event("cartUpdated"));
 
       setCart([]);
@@ -107,11 +106,6 @@ const Cart = () => {
           <div className="mb-8">
             <h1 className="font-bold text-2xl text-ink">Your Cart</h1>
           </div>
-          {msg && (
-            <div className="mb-5 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-center text-sm text-blue-700">
-              {msg}
-            </div>
-          )}
 
           {loading ? (
             <div className="text-center flex justify-center items-center">
