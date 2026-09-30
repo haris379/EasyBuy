@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
 import api from "../api/axios";
+import LoadingBar from "../components/LoadingBar";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
-  const [category, setCategory] = useState([]);
   const [msg, setMsg] = useState<string>("");
+  const [category, setCategory] = useState([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const loadProducts = async () => {
     try {
       const response = await api.get("/product");
+
       setProducts(response.data.products);
     } catch (error: any) {
       console.log(error.response?.data?.message || "An error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,7 +84,6 @@ const Home = () => {
           </div>
         )}
       </div>
-
       <div
         className="flex justify-center items-center"
         onChange={(e: any) => handleCategoryChange(e.target.value)}
@@ -94,42 +98,47 @@ const Home = () => {
         </select>
       </div>
 
-      {products.length === 0 && (
-        <p className="text-center">No Products found</p>
+      {loading ? (
+        <div className="text-center flex justify-center items-center">
+          <LoadingBar />
+        </div>
+      ) : products.length === 0 ? (
+        <p>No Products Found</p>
+      ) : (
+        <div className="grid grid-cols-1 justify-items-center gap-4 m-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {products.map((product: any) => (
+            <div
+              className="bg-gray-100 w-full max-w-xs h-80 rounded-xl border flex flex-col items-center"
+              key={product._id}
+            >
+              <img
+                src={product.image}
+                alt={product.title}
+                className="p-3 h-1/2 w-auto object-contain"
+              />
+
+              <div className="m-4 font-semibold">
+                <p>
+                  <span className="font-bold">{product.title}</span>
+                </p>
+
+                <p>
+                  <span className="font-bold">Rs. {product.price}</span>
+                </p>
+              </div>
+
+              <div className="text-center m-2 w-full">
+                <button
+                  onClick={() => addToCart(product._id)}
+                  className="inline-block w-60 py-3 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
-      <div className="grid grid-cols-1 justify-items-center gap-4 m-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {products.map((product: any) => (
-          <div
-            className="bg-gray-100 w-full max-w-xs h-80 rounded-xl border flex flex-col items-center"
-            key={product._id}
-          >
-            <img
-              src={product.image}
-              alt={product.title}
-              className="p-3 h-1/2 w-auto object-contain"
-            />
-
-            <div className="m-4 font-semibold">
-              <p>
-                <span className="font-bold">{product.title}</span>
-              </p>
-
-              <p>
-                <span className="font-bold">Rs. {product.price}</span>
-              </p>
-            </div>
-
-            <div className="text-center m-2 w-full">
-              <button
-                onClick={() => addToCart(product._id)}
-                className="inline-block w-60 py-3 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
-              >
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
     </>
   );
 };
