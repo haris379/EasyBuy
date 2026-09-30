@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingBar from "../components/LoadingBar";
 
 const Cart = () => {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState<any>([]);
   const [total, setTotal] = useState(0);
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -47,27 +47,113 @@ const Cart = () => {
       console.log(error);
     }
   };
+const increaseQuantity = async (productId: string) => {
+  const userId = localStorage.getItem("userId");
 
-  const increaseQuantity = async (productId: any) => {
-    try {
-      const userId = localStorage.getItem("userId");
-      const response = await api.put(`/cart/increase/${productId}`, { userId });
-      setCart(response.data.cart.items);
-      loadCart();
-    } catch (error) {
-      console.error(error);
+  if (!userId) {
+    alert("Please login first");
+    return;
+  }
+
+  // Save previous state
+  const previousCart = cart.map((item : any) => ({ ...item }));
+
+  // Immediately increase quantity
+  const updatedCart = cart.map((item: any) => {
+    if (item.productId?._id === productId) {
+      return {
+        ...item,
+        quantity: item.quantity + 1,
+      };
     }
-  };
-  const decreaseQuantity = async (productId: any) => {
-    try {
-      const userId = localStorage.getItem("userId");
-      const response = await api.put(`/cart/decrease/${productId}`, { userId });
-      setCart(response.data.cart.items);
-      loadCart();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
+    return item;
+  });
+
+  setCart(updatedCart);
+  setTotal(calculateTotal(updatedCart));
+
+  window.dispatchEvent(new Event("cartUpdated"));
+
+  try {
+    await api.put(`/cart/increase/${productId}`, {
+      userId,
+    });
+  } catch (error: any) {
+    // Restore previous state if API fails
+    setCart(previousCart);
+    setTotal(calculateTotal(previousCart));
+
+    console.error(
+      error.response?.data?.message || "Failed to increase quantity"
+    );
+  }
+};
+
+const decreaseQuantity = async (productId: string) => {
+  const userId = localStorage.getItem("userId");
+
+  if (!userId) {
+    alert("Please login first");
+    return;
+  }
+
+  // Save previous state
+  const previousCart = cart.map((item : any) => ({ ...item }));
+
+  // Immediately decrease quantity
+  const updatedCart = cart
+    .map((item: any) => {
+      if (item.productId?._id === productId) {
+        return {
+          ...item,
+          quantity: item.quantity - 1,
+        };
+      }
+
+      return item;
+    })
+    .filter((item: any) => item.quantity > 0);
+
+  setCart(updatedCart);
+  setTotal(calculateTotal(updatedCart));
+
+  window.dispatchEvent(new Event("cartUpdated"));
+
+  try {
+    await api.put(`/cart/decrease/${productId}`, {
+      userId,
+    });
+  } catch (error: any) {
+    // Restore previous state if API fails
+    setCart(previousCart);
+    setTotal(calculateTotal(previousCart));
+
+    console.error(
+      error.response?.data?.message || "Failed to decrease quantity"
+    );
+  }
+};
+  // const increaseQuantity = async (productId: any) => {
+  //   try {
+  //     const userId = localStorage.getItem("userId");
+  //     const response = await api.put(`/cart/increase/${productId}`, { userId });
+  //     setCart(response.data.cart.items);
+  //     loadCart();
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  // const decreaseQuantity = async (productId: any) => {
+  //   try {
+  //     const userId = localStorage.getItem("userId");
+  //     const response = await api.put(`/cart/decrease/${productId}`, { userId });
+  //     setCart(response.data.cart.items);
+  //     loadCart();
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
   const handleOrder = async () => {
     const userId = localStorage.getItem("userId");
     if (!userId) {
