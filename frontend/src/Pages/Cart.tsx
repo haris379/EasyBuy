@@ -79,6 +79,7 @@ const Cart = () => {
       console.error(error);
     }
   };
+  
   const decreaseQuantity = async (productId: any) => {
     const userId = localStorage.getItem("userId");
 
