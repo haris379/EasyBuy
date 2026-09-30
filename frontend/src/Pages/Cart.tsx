@@ -80,12 +80,31 @@ const Cart = () => {
     }
   };
   const decreaseQuantity = async (productId: any) => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please login first");
+      return;
+    }
+
+    const previouCart = cart.map((item: any) => ({ ...item }));
+    const updatedCart = cart.map((item: any) => {
+      if (item.productId._id === productId) {
+        return {
+          ...item,
+          quantity: item.quantity - 1,
+        };
+      }
+      return item;
+    });
+
+    setCart(updatedCart);
+    setTotal(calculateTotal(updatedCart));
+    window.dispatchEvent(new Event("cartUpdated"));
     try {
-      const userId = localStorage.getItem("userId");
-      const response = await api.put(`/cart/decrease/${productId}`, { userId });
-      setCart(response.data.cart.items);
-      loadCart();
+      await api.put(`/cart/decrease/${productId}`, { userId });
     } catch (error) {
+      setCart(previouCart);
+      setTotal(calculateTotal(previouCart));
       console.error(error);
     }
   };
