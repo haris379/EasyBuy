@@ -81,30 +81,58 @@ const Cart = () => {
   };
   const decreaseQuantity = async (productId: any) => {
     const userId = localStorage.getItem("userId");
+
     if (!userId) {
       alert("Please login first");
       return;
     }
 
-    const previouCart = cart.map((item: any) => ({ ...item }));
+    const previousCart = [...cart];
+
+    const currentItem = cart.find(
+      (item: any) => item?.productId?._id === productId,
+    );
+
+    if (!currentItem) return;
+    if (currentItem.quantity === 1) {
+      const updatedCart = cart.filter(
+        (item: any) => item?.productId?._id !== productId,
+      );
+
+      setCart(updatedCart);
+      setTotal(calculateTotal(updatedCart));
+      window.dispatchEvent(new Event("cartUpdated"));
+
+      try {
+        await api.put(`/cart/decrease/${productId}`, { userId });
+      } catch (error) {
+        setCart(previousCart);
+        setTotal(calculateTotal(previousCart));
+        console.error(error);
+      }
+
+      return;
+    }
     const updatedCart = cart.map((item: any) => {
-      if (item.productId._id === productId) {
+      if (item?.productId?._id === productId) {
         return {
           ...item,
           quantity: item.quantity - 1,
         };
       }
+
       return item;
     });
 
     setCart(updatedCart);
     setTotal(calculateTotal(updatedCart));
     window.dispatchEvent(new Event("cartUpdated"));
+
     try {
       await api.put(`/cart/decrease/${productId}`, { userId });
     } catch (error) {
-      setCart(previouCart);
-      setTotal(calculateTotal(previouCart));
+      setCart(previousCart);
+      setTotal(calculateTotal(previousCart));
       console.error(error);
     }
   };
