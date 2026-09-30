@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Counters from "../components/Counters.tsx";
 import ProfileCard from "../components/ProfileCard.tsx";
 import api from "../api/axios.ts";
+import LoadingBar from "../components/LoadingBar.tsx";
 interface CounterObject {
   id: number | string;
   value: number;
@@ -15,8 +16,8 @@ const defaultCounters = [
 ];
 const CounterApp = () => {
   const token = localStorage.getItem("token");
-
   const [counters, setCounters] = useState<CounterObject[]>(defaultCounters);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const loadCounters = async () => {
     try {
@@ -29,6 +30,8 @@ const CounterApp = () => {
       setCounters(countersDB);
     } catch (error) {
       console.error("Error loading counters:", error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -147,14 +150,22 @@ const CounterApp = () => {
       </h1>
 
       <main className="w-full max-w-4xl mx-auto px-2 sm:px-4">
-        <Counters
-          onIncrement={handleIncrement}
-          onDecrement={handleDecrement}
-          onDelete={handleDelete}
-          onReset={handleReset}
-          addCounter={handleAdd}
-          counters={counters}
-        />
+        {loading ? (
+          <div className="flex items-center justify-center">
+            <LoadingBar />
+          </div>
+        ) : counters.length === 0 ? (
+          <p>No Counter</p>
+        ) : (
+          <Counters
+            onIncrement={handleIncrement}
+            onDecrement={handleDecrement}
+            onDelete={handleDelete}
+            onReset={handleReset}
+            addCounter={handleAdd}
+            counters={counters}
+          />
+        )}
         {!token ? <ProfileCard /> : <div></div>}
       </main>
     </>
