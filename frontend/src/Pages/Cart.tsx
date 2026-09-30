@@ -41,6 +41,7 @@ const Cart = () => {
         productId,
       });
       setCart(response.data.cart?.items || []);
+      window.dispatchEvent(new Event("cartUpdated"));
       loadCart();
     } catch (error: any) {
       console.log(error);
