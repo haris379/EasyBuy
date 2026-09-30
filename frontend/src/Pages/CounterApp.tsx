@@ -7,8 +7,7 @@ interface CounterObject {
   id: number | string;
   value: number;
 }
-
-const defaultCounters = [
+const guestCounters = [
   { id: 1, value: 0 },
   { id: 2, value: 0 },
   { id: 3, value: 0 },
@@ -16,27 +15,33 @@ const defaultCounters = [
 ];
 const CounterApp = () => {
   const token = localStorage.getItem("token");
-  const [counters, setCounters] = useState<CounterObject[]>(defaultCounters);
+  const [counters, setCounters] = useState<CounterObject[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const loadCounters = async () => {
-    try {
-      const response = await api.get("/counter");
-      const countersDB = response.data.counters.map((counter: any) => ({
-        id: counter._id,
-        value: counter.value,
-      }));
-
-      setCounters(countersDB);
-    } catch (error) {
-      console.error("Error loading counters:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
   useEffect(() => {
+    const loadCounters = async () => {
+      if (!token) {
+        setCounters(guestCounters);
+        setLoading(false);
+        return;
+      }
+      try {
+        const response = await api.get("/counter");
+        const countersDB = response.data.counters.map((counter: any) => ({
+          id: counter._id,
+          value: counter.value,
+        }));
+
+        setCounters(countersDB);
+      } catch (error) {
+        console.error("Error loading counters:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadCounters();
-  }, []);
+  }, [token]);
 
   const handleIncrement = async (counter: CounterObject) => {
     if (!token) {
@@ -154,8 +159,6 @@ const CounterApp = () => {
           <div className="flex items-center justify-center">
             <LoadingBar />
           </div>
-        ) : counters.length === 0 ? (
-          <p>No Counter</p>
         ) : (
           <Counters
             onIncrement={handleIncrement}
