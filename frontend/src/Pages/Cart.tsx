@@ -23,6 +23,7 @@ const Cart = () => {
         return;
       }
       const response = await api.get(`/cart/${userId}`);
+      console.log(response.data.cart);
       const items = response.data.cart.items || [];
       setCart(items);
       setTotal(calculateTotal(items));
@@ -49,12 +50,32 @@ const Cart = () => {
   };
 
   const increaseQuantity = async (productId: any) => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please login first");
+      return;
+    }
+    const previouCart = cart.map((item: any) => ({ ...item }));
+
+    const updatedCart = cart.map((item: any) => {
+      if (item.productId._id === productId) {
+        return {
+          ...item,
+          quantity: item.quantity + 1,
+        };
+      }
+      return item;
+    });
+    setCart(updatedCart);
+    setTotal(calculateTotal(updatedCart));
+
+    window.dispatchEvent(new Event("cartUpdated"));
+
     try {
-      const userId = localStorage.getItem("userId");
-      const response = await api.put(`/cart/increase/${productId}`, { userId });
-      setCart(response.data.cart.items);
-      loadCart();
+      await api.put(`/cart/increase/${productId}`, { userId });
     } catch (error) {
+      setCart(previouCart);
+      setTotal(calculateTotal(previouCart));
       console.error(error);
     }
   };
