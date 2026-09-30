@@ -43,16 +43,18 @@ const Counters = ({
       {counters.length === 0 ? (
         <p className="font-bold text-center m-2">No Counter</p>
       ) : (
-        <div className="grid grid-cols-2 justify-items-center gap-2">
-          {counters.map((count: any) => (
-            <Counter
-              key={count.id}
-              onIncrement={onIncrement}
-              onDecrement={onDecrement}
-              onDelete={onDelete}
-              count={count}
-            />
-          ))}
+        <div className=" flex justify-center items-center">
+          <div>
+            {counters.map((count: any) => (
+              <Counter
+                key={count.id}
+                onIncrement={onIncrement}
+                onDecrement={onDecrement}
+                onDelete={onDelete}
+                count={count}
+              />
+            ))}
+          </div>
         </div>
       )}
     </>
