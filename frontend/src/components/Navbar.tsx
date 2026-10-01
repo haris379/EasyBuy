@@ -14,6 +14,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
   const [userName, setUserName] = useState(localStorage.getItem("userName"));
   const [role, setRole] = useState(localStorage.getItem("role"));
   const [cartCount, setCartCount] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
   const firstName = userName?.split(" ")[0];
   const navigate = useNavigate();
 
@@ -101,7 +102,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
             )}
           </div>
 
-          <div className="flex min-w-0 items-center justify-end gap-1 sm:gap-2">
+          <div className="hidden items-center justify-end gap-2 sm:flex">
             {role === "admin" ? (
               <Link to="/admin/products/" className={navBtn}>
                 Admin Dashboard
@@ -144,7 +145,66 @@ const Navbar = ({ onLogout }: NavbarProps) => {
               </>
             )}
           </div>
+
+          <div className="flex items-center gap-2 sm:hidden">
+            {role !== "admin" && (
+              <Link
+                to="/cart"
+                aria-label="Shopping cart"
+                className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-base transition  sm:h-10 sm:w-10 sm:text-lg"
+              >
+                🛒
+                {cartCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-volt px-1 text-[10px] font-bold text-[#F3E6D5] sm:h-5 sm:min-w-5">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
+            <button
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-label="Toggle menu"
+              className="flex h-8 w-8 items-center justify-center text-xl"
+            >
+              {menuOpen ? "✕" : "☰"}
+            </button>
+          </div>
         </div>
+        {menuOpen && (
+          <div
+            className="flex flex-col gap-2 pb-3 sm:hidden"
+            onClick={() => setMenuOpen(false)}
+          >
+            {role === "admin" ? (
+              <Link to="/admin/products/" className={navBtn}>
+                Admin Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link to="/" className={navBtn}>
+                  Home
+                </Link>
+                <Link to="/counter-app" className={navBtn}>
+                  Counter App
+                </Link>
+              </>
+            )}
+            {userId ? (
+              <button onClick={logout} className={navBtn}>
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link to="/login" className={navBtn}>
+                  Login
+                </Link>
+                <Link to="/signup" className={navBtn}>
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   );
