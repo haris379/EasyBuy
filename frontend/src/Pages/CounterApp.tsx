@@ -55,7 +55,6 @@ const CounterApp = () => {
       return count;
     });
     setCounters(updatedCounters);
-    console.log(updatedCounters);
     try {
       await api.put(`/counter/increment/${counter.id}`);
     } catch (error) {
@@ -65,31 +64,23 @@ const CounterApp = () => {
   };
 
   const handleDecrement = async (counter: CounterObject) => {
-    if (!token) {
-      setCounters((counters) =>
-        counters.map((item) =>
-          item.id === counter.id
-            ? item.value > 0
-              ? { ...item, value: item.value - 1 }
-              : item
-            : item,
-        ),
-      );
-      return;
-    }
+    const previouCounters = [...counters];
+    const updatedCounters = counters.map((count) => {
+      if (count.id === counter.id) {
+        if (counter.value > 0) {
+          return {
+            ...count,
+            value: count.value - 1,
+          };
+        }
+      }
+      return count;
+    });
+    setCounters(updatedCounters);
     try {
-      const response = await api.put(`/counter/decrement/${counter.id}`);
-      setCounters((counters) =>
-        counters.map((item) =>
-          item.id === counter.id
-            ? {
-                ...item,
-                value: response.data.counter.value,
-              }
-            : item,
-        ),
-      );
+      await api.put(`/counter/decrement/${counter.id}`);
     } catch (error) {
+      setCounters(previouCounters);
       console.error("Error Decrementing Value");
     }
   };
