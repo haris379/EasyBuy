@@ -132,15 +132,16 @@ const CounterApp = () => {
     }
   };
   const handleDelete = async (id: string | number) => {
+    const previouCounters = [...counters];
+    const updatedCounters = counters.filter((count) => {
+      return count.id !== id;
+    });
+    setCounters(updatedCounters);
     try {
       await api.delete(`/counter/${id}`);
-
-      setCounters((prevCounters) =>
-        prevCounters.filter((counter) => counter.id !== id),
-      );
     } catch (error: any) {
+      setCounters(previouCounters);
       console.error("Error deleting counter:", error);
-
       if (error.response?.status === 401) {
         alert("Please login to continue");
       }
