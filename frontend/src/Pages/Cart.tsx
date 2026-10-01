@@ -197,7 +197,7 @@ const Cart = () => {
   return (
     <>
       <div className="min-h-[70vh]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
           <div className="mb-8">
             <h1 className="font-bold text-2xl text-ink">Your Cart</h1>
           </div>
@@ -215,7 +215,10 @@ const Cart = () => {
               {cart.map((item: any) => {
                 if (!item.productId) return null;
                 return (
-                  <div key={item._id} className="card p-4  bg-[#F3E6D5] sm:p-5">
+                  <div
+                    key={item._id}
+                    className="card p-4  bg-[#FFF9F2] sm:p-5 border-2 border-[#800020] rounded-2xl"
+                  >
                     <div className="flex flex-col sm:flex-row sm:items-center gap-5">
                       <div className="flex items-center gap-4 flex-1 min-w-0">
                         <img
@@ -224,19 +227,20 @@ const Cart = () => {
                           className="w-20 h-20 object-cover rounded-lg bg-paper shrink-0"
                         />
 
-                        <div className=" flex flex-col">
+                        <div className="flex flex-col">
+                          {/* Product Price and Title  */}
                           <div className="min-w-0">
                             <h2 className="font-semibold text-ink truncate">
-                              <span className="font-bold">Product Title: </span>
                               {item.productId.title}
                             </h2>
-                            <p className="text-sm text-ink-soft mt-1">
-                              {item.productId.price}
+                            <p className="text-sm text-ink-soft  font-light">
+                              Rs.{item.productId.price}
                             </p>
                           </div>
 
-                          <div className="h-6 w-fit border border-line rounded-lg px-2 mt-2">
-                            <div className="flex h-full items-center gap-3">
+                          {/* Buttons  */}
+                          <div className="h-7 w-fit border border-line rounded-md mt-2">
+                            <div className="flex h-full items-center px-2 gap-3">
                               <button
                                 type="button"
                                 onClick={() =>
@@ -254,7 +258,7 @@ const Cart = () => {
                                 onClick={() =>
                                   increaseQuantity(item.productId._id)
                                 }
-                                className="w-5 h-5 flex items-center justify-center text-ink-soft"
+                                className="w-4 h-3 flex items-center justify-center text-ink-soft"
                               >
                                 <IncrementBtn />
                               </button>
@@ -270,9 +274,9 @@ const Cart = () => {
                       </div>
                       <button
                         onClick={() => removeItem(item.productId._id)}
-                        className="text-sm bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors w-full sm:w-auto"
+                        className="text-sm bg-[#800020] text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors w-full sm:w-auto"
                       >
-                        Delete
+                        Remove item
                       </button>
                     </div>
                   </div>
