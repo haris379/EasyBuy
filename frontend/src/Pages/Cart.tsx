@@ -193,7 +193,7 @@ const Cart = () => {
               {cart.map((item: any) => {
                 if (!item.productId) return null;
                 return (
-                  <div key={item._id} className="card p-4 sm:p-5">
+                  <div key={item._id} className="card p-4  bg-[#F3E6D5] sm:p-5">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-5">
                       <div className="flex items-center gap-4 flex-1 min-w-0">
                         <img
@@ -201,34 +201,43 @@ const Cart = () => {
                           alt={item.productId.title}
                           className="w-20 h-20 object-cover rounded-lg bg-paper shrink-0"
                         />
-                        <div className="min-w-0">
-                          <h2 className="font-semibold text-ink truncate">
-                            {item.productId.title}
-                          </h2>
-                          <p className="text-sm text-ink-soft mt-1">
-                            {item.productId.price}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="h-8  border border-line rounded-lg px-2 py-1 w-fit p-2">
-                        <div className="flex items-center gap-3">
-                          <button
-                            type="button"
-                            onClick={() => decreaseQuantity(item.productId._id)}
-                            className="w-6 h-6 flex items-center justify-center text-lg text-ink-soft "
-                          >
-                            <DecrementBtn />
-                          </button>
-                          <span className="w-6 text-sm text-center text-black">
-                            {item.quantity}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => increaseQuantity(item.productId._id)}
-                            className="w-6 h-6 flex items-center justify-center text-lg text-ink-soft "
-                          >
-                            <IncrementBtn />
-                          </button>
+
+                        <div className=" flex flex-col">
+                          <div className="min-w-0">
+                            <h2 className="font-semibold text-ink truncate">
+                              <span className="font-bold">Product Title: </span>
+                              {item.productId.title}
+                            </h2>
+                            <p className="text-sm text-ink-soft mt-1">
+                              {item.productId.price}
+                            </p>
+                          </div>
+
+                          <div className="h-6 w-fit border border-line rounded-lg px-2 mt-2">
+                            <div className="flex h-full items-center gap-3">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  decreaseQuantity(item.productId._id)
+                                }
+                                className="w-5 h-5 flex items-center justify-center text-ink-soft"
+                              >
+                                <DecrementBtn />
+                              </button>
+                              <span className="w-6 text-sm text-center text-black">
+                                {item.quantity}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  increaseQuantity(item.productId._id)
+                                }
+                                className="w-5 h-5 flex items-center justify-center text-ink-soft"
+                              >
+                                <IncrementBtn />
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
 

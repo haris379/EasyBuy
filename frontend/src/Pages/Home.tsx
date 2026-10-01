@@ -108,7 +108,7 @@ const Home = () => {
         <div className="grid grid-cols-1 justify-items-center gap-4 m-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product: any) => (
             <div
-              className="bg-gray-100 w-full max-w-xs h-80 rounded-xl border flex flex-col items-center"
+              className="bg-[#FFF9F2] w-full max-w-xs h-80 rounded-xl border flex flex-col items-center"
               key={product._id}
             >
               <img
@@ -130,7 +130,7 @@ const Home = () => {
               <div className="text-center m-2 w-full">
                 <button
                   onClick={() => addToCart(product._id)}
-                  className="inline-block w-60 py-3 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
+                  className="inline-block w-60 py-3 bg-[#800020] hover:bg-[#D45060] text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
                 >
                   Add to Cart
                 </button>

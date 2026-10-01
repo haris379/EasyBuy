@@ -57,16 +57,17 @@ const Navbar = ({ onLogout }: NavbarProps) => {
     navigate("/");
   };
   return (
-    <nav className="sticky top-0 z-50 w-full bg-gray-100 shadow-sm">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex min-h-18 flex-col justify-center gap-3 py-3 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:py-2">
-          <div className="flex flex-col items-center lg:items-start">
+    <nav className="sticky top-0 z-50 w-fit bg-gray-100 shadow-sm">
+      <div className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-2 py-2">
+          <div className="flex flex-col items-start min-w-0">
             <Link
               to="/"
               className="text-lg font-bold text-gray-800 transition hover:text-gray-600 sm:text-xl"
             >
               EasyBuy
             </Link>
+
             {userId && (
               <h2 className="mt-1 text-xs font-medium text-gray-700 sm:text-sm">
                 Welcome, {userName}
@@ -74,16 +75,18 @@ const Navbar = ({ onLogout }: NavbarProps) => {
             )}
           </div>
 
-          <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:w-auto lg:justify-end">
+          <div className="flex min-w-0 items-center justify-end gap-1 sm:gap-2">
             {role === "admin" ? (
-              <Link
-                to="/admin/products/"
-                className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
-              >
-                Admin Dashboard
-              </Link>
+              <div className="flex items-center justify-end gap-1 sm:gap-2">
+                <Link
+                  to="/admin/products/"
+                  className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
+                >
+                  Admin Dashboard
+                </Link>
+              </div>
             ) : (
-              <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-end">
+              <div className="flex items-center justify-end gap-1 sm:gap-2">
                 <Link
                   to="/cart"
                   aria-label="Shopping cart"
@@ -111,30 +114,31 @@ const Navbar = ({ onLogout }: NavbarProps) => {
                 </Link>
               </div>
             )}
-
-            {userId ? (
-              <button
-                onClick={logout}
-                className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
-              >
-                Logout
-              </button>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Link
-                  to="/login"
+            <div>
+              {userId ? (
+                <button
+                  onClick={logout}
                   className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
                 >
-                  Login
-                </Link>
-                <Link
-                  to="/signup"
-                  className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
-                >
-                  Sign Up
-                </Link>
-              </div>
-            )}
+                  Logout
+                </button>
+              ) : (
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <Link
+                    to="/login"
+                    className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="btn-primary whitespace-nowrap px-3 py-2 text-xs text-center sm:px-4 sm:text-sm"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
