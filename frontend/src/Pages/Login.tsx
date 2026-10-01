@@ -109,7 +109,7 @@ const Login = () => {
 
                   <button
                     type="submit"
-                    className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
+                    className="w-full py-3 bg-[#8B2635] hover:bg-[#A83A48] text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
                   >
                     Login
                   </button>
@@ -119,7 +119,7 @@ const Login = () => {
 
                   <Link
                     to="/signup"
-                    className="text-blue-600 hover:text-blue-700 font-semibold"
+                    className="text-[#8B2635] hover:text-[#A83A48] font-semibold"
                   >
                     Signup
                   </Link>
@@ -129,7 +129,7 @@ const Login = () => {
 
                   <Link
                     to="/re-send-otp"
-                    className="text-blue-600 hover:text-blue-700 font-semibold"
+                    className="text-[#8B2635] hover:text-[#A83A48] font-semibold"
                   >
                     Verify
                   </Link>
