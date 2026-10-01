@@ -29,7 +29,7 @@ const Cart = () => {
       console.log(response.data.cart);
       const items = response.data.cart.items || [];
       setCart(items);
-      // setTotal(calculateTotal(items));
+      setTotal(calculateTotal(items));
     } catch (error: any) {
       console.log(error);
     } finally {
@@ -49,9 +49,8 @@ const Cart = () => {
     const updatedCart = cart.filter((item: any) => {
       return item.productId?._id !== productId;
     });
-    // console.log(updatedCart);
     setCart(updatedCart);
-    // setTotal(calculateTotal(updatedCart));
+    setTotal(calculateTotal(updatedCart));
     try {
       await api.post("/cart/removeItem", {
         userId,
@@ -295,7 +294,7 @@ const Cart = () => {
             <button
               onClick={() => handleOrder()}
               disabled={cart.length === 0 || loading}
-              className="w-1/2 py-3 m-5 bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold rounded-lg  duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="w-1/2 py-3 m-5 bg-[#7A1F3D] hover:bg-[#92284A] text-[#F3E6D5] text-center font-semibold rounded-lg  duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               Place Order
             </button>
