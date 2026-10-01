@@ -2,9 +2,14 @@ import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import LoadingBar from "../components/LoadingBar";
+
+const inputStyle =
+  "w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-[#5E162F] focus:ring-2 focus:ring-[#5E162F]/20";
 
 const Verification = () => {
   const [msg, setMsg] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [form, setForm] = useState({
     code: "",
@@ -19,17 +24,17 @@ const Verification = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setLoading(true);
+    setTimeout(() => {
+      setMsg("");
+    }, 1000);
     try {
-      const response = await api.post("/auth/verifyemail", form);
-      setMsg(response.data.message);
-      setTimeout(() => {
-        navigate("/");
-      }, 500);
+      await api.post("/auth/verifyemail", form);
+      navigate("/");
     } catch (error: any) {
-      console.log(error);
-
       setMsg(error.response?.data?.message || "An error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,34 +49,41 @@ const Verification = () => {
 
             <p className="text-gray-500 mt-2">Please enter your OTP</p>
           </div>
-
-          {msg && (
-            <div className="mb-5 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-center text-sm text-blue-700">
-              {msg}
+          {loading ? (
+            <div className="flex justify-center">
+              <LoadingBar />
             </div>
+          ) : (
+            <>
+              {msg && (
+                <div className="mb-5 rounded-lg bg-[#FBECEF] border border-[#E8B8C3] px-4 py-3 text-center text-sm text-[#8B2635]">
+                  {msg}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <div>
+                  <input
+                    id="code"
+                    className={inputStyle}
+                    type="text"
+                    placeholder="Enter 6-digit OTP"
+                    name="code"
+                    value={form.code}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-[#8B2635] hover:bg-[#A83A48] text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
+                >
+                  Verify
+                </button>
+              </form>
+            </>
           )}
-
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <div>
-              <input
-                id="code"
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                type="text"
-                placeholder="Enter 6-digit OTP"
-                name="code"
-                value={form.code}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
-            >
-              Verify
-            </button>
-          </form>
         </div>
       </div>
     </div>

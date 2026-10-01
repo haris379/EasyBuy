@@ -2,9 +2,14 @@ import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import LoadingBar from "../components/LoadingBar";
+
+const inputStyle =
+  "w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-[#5E162F] focus:ring-2 focus:ring-[#5E162F]/20";
 
 const ResendCode = () => {
   const [msg, setMsg] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
@@ -19,7 +24,10 @@ const ResendCode = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setLoading(true);
+    setTimeout(() => {
+      setMsg("");
+    }, 1000);
     try {
       const response = await api.post("/auth/re-send", form);
       setMsg(response.data.message);
@@ -27,10 +35,9 @@ const ResendCode = () => {
         setTimeout(() => {
           navigate("/login");
         }, 1000);
+        return;
       }
-      setTimeout(() => {
-        navigate("/verify");
-      }, 1000);
+      navigate("/verify");
     } catch (error: any) {
       setMsg(error.response?.data?.message || "An error occurred");
     }
@@ -48,33 +55,41 @@ const ResendCode = () => {
             <p className="text-gray-500 mt-2">Please enter your email</p>
           </div>
 
-          {msg && (
-            <div className="mb-5 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-center text-sm text-blue-700">
-              {msg}
+          {loading ? (
+            <div className="flex justify-center">
+              <LoadingBar />
             </div>
+          ) : (
+            <>
+              {msg && (
+                <div className="mb-5 rounded-lg bg-[#FBECEF] border border-[#E8B8C3] px-4 py-3 text-center text-sm text-[#8B2635]">
+                  {msg}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <div>
+                  <input
+                    id="email"
+                    className={inputStyle}
+                    type="text"
+                    placeholder="Enter your email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-[#8B2635] hover:bg-[#A83A48] text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
+                >
+                  Send OTP
+                </button>
+              </form>
+            </>
           )}
-
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <div>
-              <input
-                id="email"
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                type="text"
-                placeholder="Enter your email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
-            >
-              Send OTP
-            </button>
-          </form>
         </div>
       </div>
     </div>
