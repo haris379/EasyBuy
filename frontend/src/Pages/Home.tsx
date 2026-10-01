@@ -51,15 +51,25 @@ const Home = () => {
   };
   const getAllCategories = async () => {
     try {
+      setLoading(true);
       const response = await api.get("/product/allCategories");
       setCategory(response.data.categories);
-    } catch (error) {}
+    } catch (error: any) {
+      console.error(
+        error.response?.data?.message || "Error filtering products",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCategoryChange = async (selectedcat: string) => {
     try {
+      setLoading(true);
+
       if (!selectedcat) {
-        loadProducts();
+        const response = await api.get("/product");
+        setProducts(response.data.products);
         return;
       }
       const response = await api.get(
@@ -67,7 +77,11 @@ const Home = () => {
       );
       setProducts(response.data.products);
     } catch (error: any) {
-      console.log(error.response?.data?.message || "Error filtering products");
+      console.error(
+        error.response?.data?.message || "Error filtering products",
+      );
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
