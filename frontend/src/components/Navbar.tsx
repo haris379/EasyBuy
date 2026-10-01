@@ -9,6 +9,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
   const [userName, setUserName] = useState(localStorage.getItem("userName"));
   const [cartCount, setCartCount] = useState(0);
   const role = localStorage.getItem("role");
+  const firstName = userName?.split(" ")[0];
   const navigate = useNavigate();
   useEffect(() => {
     loadCart();
@@ -60,26 +61,23 @@ const Navbar = ({ onLogout }: NavbarProps) => {
     <nav className="sticky top-0 z-50 w-full bg-gray-100 shadow-sm">
       <div className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between gap-2 py-2">
-          <div className="sm:flex sm:flex-col sm:items-start sm:min-w-0">
-            <div>
-              <Link
-                to="/"
-                className="text-lg font-bold text-gray-800 transition hover:text-gray-600 sm:text-xl"
-              >
-                EasyBuy
-              </Link>
-            </div>
+          <div className="flex min-w-0 shrink flex-col items-start justify-center">
+            <Link
+              to="/"
+              className="text-lg font-bold leading-tight text-gray-800 transition hover:text-gray-600 sm:text-xl"
+            >
+              EasyBuy
+            </Link>
 
-            <div>
-              {userId && (
-                <h2 className="mt-1 text-xs font-medium text-gray-700 sm:absolute sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:mt-0 sm:text-sm">
-                  Welcome, <div>{userName}</div>
-                </h2>
-              )}
-            </div>
+            {userId && (
+              <span className="max-w-full truncate whitespace-nowrap text-[11px] font-medium leading-tight text-gray-700 sm:absolute sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:text-sm">
+                <span className="sm:hidden">Hi, {firstName}</span>
+                <span className="hidden sm:inline">Welcome, {userName}</span>
+              </span>
+            )}
           </div>
 
-          <div className="flex min-w-0 items-center justify-end gap-1 sm:gap-2">
+          <div className="flex shrink-0 items-center justify-end gap-1 sm:gap-2">
             {role === "admin" ? (
               <div className="flex items-center justify-end gap-1 sm:gap-2">
                 <Link
