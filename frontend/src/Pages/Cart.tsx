@@ -17,6 +17,7 @@ const Cart = () => {
       return total + item.quantity * item.productId.price;
     }, 0);
   };
+
   const loadCart = async () => {
     try {
       const userId = localStorage.getItem("userId");
@@ -43,6 +44,8 @@ const Cart = () => {
       return;
     }
     const previouCart = [...cart];
+    const removed = cart.find((item: any) => item.productId?._id === productId);
+    if (!removed) return;
     const updatedCart = cart.filter((item: any) => {
       return item.productId._id !== productId;
     });
@@ -53,10 +56,15 @@ const Cart = () => {
         productId,
       });
       setCart(response.data.cart?.items || []);
-      window.dispatchEvent(new Event("cartUpdated"));
+      window.dispatchEvent(
+        new CustomEvent("cartDelta", { detail: -removed.quantity }),
+      );
       loadCart();
     } catch (error: any) {
       setCart(previouCart);
+      window.dispatchEvent(
+        new CustomEvent("cartDelta", { detail: removed.quantity }),
+      );
       console.error(error);
     }
   };
@@ -81,13 +89,15 @@ const Cart = () => {
     setCart(updatedCart);
     setTotal(calculateTotal(updatedCart));
 
-    window.dispatchEvent(new Event("cartUpdated"));
+    window.dispatchEvent(new CustomEvent("cartDelta", { detail: 1 }));
 
     try {
       await api.put(`/cart/increase/${productId}`, { userId });
     } catch (error) {
       setCart(previouCart);
       setTotal(calculateTotal(previouCart));
+      window.dispatchEvent(new CustomEvent("cartDelta", { detail: -1 }));
+
       console.error(error);
     }
   };
@@ -114,13 +124,15 @@ const Cart = () => {
 
       setCart(updatedCart);
       setTotal(calculateTotal(updatedCart));
-      window.dispatchEvent(new Event("cartUpdated"));
+      window.dispatchEvent(new CustomEvent("cartDelta", { detail: -1 }));
 
       try {
         await api.put(`/cart/decrease/${productId}`, { userId });
       } catch (error) {
         setCart(previousCart);
         setTotal(calculateTotal(previousCart));
+        window.dispatchEvent(new CustomEvent("cartDelta", { detail: 1 }));
+
         console.error(error);
       }
 
