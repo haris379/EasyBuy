@@ -42,8 +42,11 @@ export const signup = async (req, res) => {
 
     await sendVerificationCode(user.email, verificationCode);
     await user.save();
-    res.status(200).json({ message: "User registered Successfully" });
+    res.status(200).json({
+      message: "User registered Successfully",
+    });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Error Signup", error });
   }
 };
@@ -69,13 +72,25 @@ export const verifyEmailOnSignup = async (req, res) => {
         message: "Verification Code expired",
       });
     }
-
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRE_KEY, {
+      expiresIn: "5h",
+    });
     user.isVerified = true;
     user.verificationCode = undefined;
     user.verificationCodeExpires = undefined;
     sendWelcomeEmail(user.email, user.name);
     await user.save();
-    res.status(200).json({ message: "Email verified Successfully" });
+    res.status(200).json({
+      message: "Email verified Successfully",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isVerified: user.isVerified,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: "Verifiaction Failed", error });
   }
