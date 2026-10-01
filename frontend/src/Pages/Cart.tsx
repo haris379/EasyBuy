@@ -3,6 +3,7 @@ import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import LoadingBar from "../components/LoadingBar";
 import IncrementBtn from "../components/IncrementBtn";
+import DecrementBtn from "../components/DecrementBtn";
 
 const Cart = () => {
   const [cart, setCart] = useState<any>([]);
@@ -216,7 +217,7 @@ const Cart = () => {
                             onClick={() => decreaseQuantity(item.productId._id)}
                             className="w-6 h-6 flex items-center justify-center text-lg text-ink-soft "
                           >
-                            -
+                            <DecrementBtn />
                           </button>
                           <span className="w-6 text-sm text-center text-black">
                             {item.quantity}
