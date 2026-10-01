@@ -31,7 +31,6 @@ const Home = () => {
     window.dispatchEvent(new CustomEvent("cartDelta", { detail: 1 }));
     try {
       await api.post("/cart/addToCart", { userId, productId });
-      window.dispatchEvent(new Event("cartUpdated"));
     } catch (error: any) {
       window.dispatchEvent(new CustomEvent("cartDelta", { detail: -1 }));
       console.log(
