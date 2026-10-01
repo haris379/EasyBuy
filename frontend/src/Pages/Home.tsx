@@ -5,7 +5,7 @@ import LoadingBar from "../components/LoadingBar";
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
-  const [cart, setCart] = useState<any>([]);
+  const [addingId, setAddingId] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const loadProducts = async () => {
@@ -19,23 +19,6 @@ const Home = () => {
       setLoading(false);
     }
   };
-  const loadCart = async () => {
-    try {
-      const userId = localStorage.getItem("userId");
-      if (!userId) {
-        setCart([]);
-        return;
-      }
-      const response = await api.get(`/cart/${userId}`);
-      console.log(cart);
-      const items = response.data.cart.items || [];
-      setCart(items);
-    } catch (error: any) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const addToCart = async (productId: any) => {
     const userId = localStorage.getItem("userId");
@@ -43,15 +26,19 @@ const Home = () => {
       alert("Please Login to continue");
       return;
     }
-
+    if (addingId === productId) return;
+    setAddingId(productId);
+    window.dispatchEvent(new CustomEvent("cartDelta", { detail: 1 }));
     try {
       await api.post("/cart/addToCart", { userId, productId });
-      await loadCart();
       window.dispatchEvent(new Event("cartUpdated"));
     } catch (error: any) {
+      window.dispatchEvent(new CustomEvent("cartDelta", { detail: -1 }));
       console.log(
         error.response?.data?.message || "Error adding Product in Cart",
       );
+    } finally {
+      setAddingId(null);
     }
   };
   const getAllCategories = async () => {
@@ -92,7 +79,6 @@ const Home = () => {
   useEffect(() => {
     loadProducts();
     getAllCategories();
-    loadCart();
   }, []);
 
   return (

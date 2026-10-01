@@ -19,7 +19,6 @@ const Navbar = ({ onLogout }: NavbarProps) => {
 
   useEffect(() => {
     loadCart();
-
     const handleAuthChange = () => {
       const id = localStorage.getItem("userId");
       const name = localStorage.getItem("userName");
@@ -33,11 +32,17 @@ const Navbar = ({ onLogout }: NavbarProps) => {
       }
     };
 
+    const handleCartDelta = (e: Event) => {
+      const delta = (e as CustomEvent<number>).detail;
+      setCartCount((c) => Math.max(0, c + delta));
+    };
     window.addEventListener("authChanged", handleAuthChange);
     window.addEventListener("cartUpdated", loadCart);
+    window.addEventListener("cartDelta", handleCartDelta);
     return () => {
       window.removeEventListener("authChanged", handleAuthChange);
       window.removeEventListener("cartUpdated", loadCart);
+      window.removeEventListener("cartDelta", handleCartDelta);
     };
   }, []);
 
@@ -56,7 +61,6 @@ const Navbar = ({ onLogout }: NavbarProps) => {
           0,
         ),
       );
-      window.dispatchEvent(new Event("cartUpdated"));
     } catch (error) {
       console.error("Failed to load cart:", error);
       setCartCount(0);
