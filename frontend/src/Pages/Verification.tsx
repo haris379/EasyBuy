@@ -29,8 +29,13 @@ const Verification = () => {
       setMsg("");
     }, 1000);
     try {
-      await api.post("/auth/verifyemail", form);
+      const response = await api.post("/auth/verifyemail", form);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userId", response.data.user.id);
+      localStorage.setItem("userName", response.data.user.name);
+      localStorage.setItem("role", response.data.user.role);
       navigate("/");
+      window.dispatchEvent(new Event("authChanged"));
     } catch (error: any) {
       setMsg(error.response?.data?.message || "An error occurred");
     } finally {
