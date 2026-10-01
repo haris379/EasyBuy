@@ -172,8 +172,8 @@ const CounterApp = () => {
             counters={counters}
           />
         )}
-        {!token ? <ProfileCard /> : <div></div>}
       </main>
+      {!token ? <ProfileCard /> : <div></div>}
     </>
   );
 };

@@ -4,12 +4,13 @@ import api from "../api/axios";
 import LoadingBar from "./LoadingBar";
 
 const ProfileCard = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const loadUsers = async () => {
     try {
       const response = await api.get("/user/all-users");
+
       const updatedUsersArray = response.data.users.filter((user: any) => {
         return user.isVerified === true && user.role === "user";
       });
@@ -29,41 +30,50 @@ const ProfileCard = () => {
   return (
     <>
       {loading ? (
-        <div className="text-center flex justify-center items-center">
+        <div className="flex justify-center items-center">
           <LoadingBar />
         </div>
       ) : users.length === 0 ? (
         <p className="font-bold text-center m-2">No User</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 m-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
           {users.map((user: any) => (
             <div
-              className=" bg-gray-300  h-auto w-auto rounded-xl border flex flex-col justify-between"
               key={user._id}
+              className="w-full bg-[#FFF9F2] rounded-xl border p-4 flex flex-col"
             >
-              <h2 className="text-center m-2 font-bold">User Profile</h2>
-              <div className="m-4 font-semibold">
-                <p>
-                  <span className="font-bold">Name</span> : {user.name}
-                </p>
-                <p>
-                  <span className="font-bold">Email</span> : {user.email}
-                </p>
+              <h2 className="text-center font-bold text-lg mb-4">
+                User Profile
+              </h2>
+
+              <div className="space-y-3 mb-5">
+                <div className="flex items-start">
+                  <span className="font-bold w-16 shrink-0">Name:</span>
+
+                  <span className="font-semibold break-all">{user.name}</span>
+                </div>
+
+                <div className="flex items-start">
+                  <span className="font-bold w-16 shrink-0">Email:</span>
+
+                  <span className="font-semibold break-all">{user.email}</span>
+                </div>
               </div>
-              <div className="text-center m-2">
-                <Link
-                  to={`/login-id/${user._id}`}
-                  state={{ name: user.name, email: user.email }}
-                  className="inline-block w-60 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
-                >
-                  Login
-                </Link>
-              </div>
+
+              <Link
+                to={`/login-id/${user._id}`}
+                state={{
+                  name: user.name,
+                  email: user.email,
+                }}
+                className="w-auto py-3 bg-[#7A1F3D] hover:bg-[#92284A]  text-white font-semibold rounded-lg text-center transition duration-200"
+              >
+                Login
+              </Link>
             </div>
           ))}
         </div>
       )}
-     
     </>
   );
 };

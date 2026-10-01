@@ -14,20 +14,27 @@ export const createOrder = async (req, res) => {
       });
     }
     const cart = await Cart.findOne({ userId }).populate("items.productId");
-
-    if (!cart) {
-      return res.status(401).json({
-        message: "No order in your cart",
-      });
-    }
-    if (cart.items.length === 0) {
+    if (!cart || cart.items.length === 0) {
       return res.status(401).json({
         message: "No item in your cart",
       });
     }
 
-    // cart.items.map((item) => console.log(item));
+    const validItems = cart.items.filter((item) => item.productId);
+    if (validItems.length === 0) {
+      await Cart.findOneAndUpdate({ userId }, { items: [] });
+      return res.status(400).json({
+        message: "Products in your cart are no longer available",
+      });
+    }
 
+    for (const item of validItems) {
+      if (item.productId.stock < item.quantity) {
+        return res.status(400).json({
+          message: `Not enough stock for ${item.productId.title}`,
+        });
+      }
+    }
     const orderItems = cart.items.map((item) => ({
       productId: item.productId?._id,
       title: item.productId?.title,
@@ -56,7 +63,14 @@ export const createOrder = async (req, res) => {
 
     await Cart.findOneAndUpdate({ userId }, { items: [] });
 
-    await sendOrderEmail(user.email, user.name, order._id, orderItems, total, order.paymentMethod);
+    await sendOrderEmail(
+      user.email,
+      user.name,
+      order._id,
+      orderItems,
+      total,
+      order.paymentMethod,
+    );
     await order.save();
     return res.status(200).json({
       message: "Order placed",
