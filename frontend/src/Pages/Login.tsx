@@ -2,7 +2,8 @@ import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import loadingAuthBar from "../assets/loadingAuth.gif";
+// import loadingAuthBar from "../assets/loadingAuth.gif";
+import LoadingBar from "../components/LoadingBar";
 
 interface FormObj {
   email: string;
@@ -57,7 +58,8 @@ const Login = () => {
             </div>
             {loading ? (
               <div className="flex justify-center">
-                <img src={loadingAuthBar} alt="Loading" />
+                {/* <img src={loadingAuthBar} alt="Loading" /> */}
+                <LoadingBar/>
               </div>
             ) : (
               <>
