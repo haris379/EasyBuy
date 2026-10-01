@@ -52,19 +52,23 @@ const CounterApp = () => {
       );
       return;
     }
+    const previouCounters = [...counters];
+
+    const updatedCounters = counters.map((count) => {
+      if (count.id === counter.id) {
+        return {
+          ...count,
+          value: count.value + 1,
+        };
+      }
+      return count;
+    });
+    setCounters(updatedCounters);
+    console.log(updatedCounters);
     try {
-      const response = await api.put(`/counter/increment/${counter.id}`);
-      setCounters((counters) =>
-        counters.map((item) =>
-          item.id === counter.id
-            ? {
-                ...item,
-                value: response.data.counter.value,
-              }
-            : item,
-        ),
-      );
+      await api.put(`/counter/increment/${counter.id}`);
     } catch (error) {
+      setCounters(previouCounters);
       console.error("Error Incrementing Value");
     }
   };
