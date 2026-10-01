@@ -32,7 +32,7 @@ const OrderPlaced = () => {
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link
             to="/"
-            className="rounded-lg bg-[#800020] px-6 py-3 font-medium text-[#F3E6D5] transition hover:bg-green-700"
+            className="rounded-lg bg-[#800020] px-6 py-3 font-medium text-[#F3E6D5] transition hover:bg-[#92284A]"
           >
             Continue Shopping
           </Link>
