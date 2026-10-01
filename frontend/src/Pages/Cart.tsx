@@ -29,7 +29,7 @@ const Cart = () => {
       console.log(response.data.cart);
       const items = response.data.cart.items || [];
       setCart(items);
-      setTotal(calculateTotal(items));
+      // setTotal(calculateTotal(items));
     } catch (error: any) {
       console.log(error);
     } finally {
@@ -49,8 +49,9 @@ const Cart = () => {
     const updatedCart = cart.filter((item: any) => {
       return item.productId?._id !== productId;
     });
+    // console.log(updatedCart);
     setCart(updatedCart);
-    setTotal(calculateTotal(updatedCart));
+    // setTotal(calculateTotal(updatedCart));
     try {
       await api.post("/cart/removeItem", {
         userId,

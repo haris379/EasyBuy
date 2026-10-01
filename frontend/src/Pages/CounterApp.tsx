@@ -95,26 +95,44 @@ const CounterApp = () => {
   };
 
   const handleAdd = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Please login to continue");
+      return;
+    }
+
+    const temporaryCounter: CounterObject = {
+      id: `temp-${Date.now()}`,
+      value: 0,
+    };
+
+    setCounters((prevCounters) => [...prevCounters, temporaryCounter]);
+
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Please login to continue");
-        return;
+      const response = await api.post("/counter/add");
+      const newCounter = response.data.counter;
+
+      if (newCounter) {
+        setCounters((prevCounters) =>
+          prevCounters.map((counter) =>
+            counter.id === temporaryCounter.id
+              ? {
+                  id: newCounter._id,
+                  value: newCounter.value,
+                }
+              : counter,
+          ),
+        );
       }
-      await api.post("/counter/add");
-
-      const response = await api.get("/counter");
-      const counters = response.data.counters.map((count: any) => ({
-        id: count._id,
-        value: count.value,
-      }));
-
-      setCounters(counters);
     } catch (error: any) {
+      setCounters((prevCounters) =>
+        prevCounters.filter((counter) => counter.id !== temporaryCounter.id),
+      );
+
       console.error("Error adding counter:", error);
     }
   };
-
   const handleDelete = async (id: string | number) => {
     try {
       await api.delete(`/counter/${id}`);
