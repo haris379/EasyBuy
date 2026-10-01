@@ -37,8 +37,17 @@ const Cart = () => {
   };
 
   const removeItem = async (productId: any) => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please login first");
+      return;
+    }
+    const previouCart = [...cart];
+    const updatedCart = cart.filter((item: any) => {
+      return item.productId._id !== productId;
+    });
+    setCart(updatedCart);
     try {
-      const userId = localStorage.getItem("userId");
       const response = await api.post("/cart/removeItem", {
         userId,
         productId,
@@ -47,7 +56,8 @@ const Cart = () => {
       window.dispatchEvent(new Event("cartUpdated"));
       loadCart();
     } catch (error: any) {
-      console.log(error);
+      setCart(previouCart);
+      console.error(error);
     }
   };
 
