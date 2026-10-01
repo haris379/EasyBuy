@@ -47,19 +47,19 @@ const Cart = () => {
     const removed = cart.find((item: any) => item.productId?._id === productId);
     if (!removed) return;
     const updatedCart = cart.filter((item: any) => {
-      return item.productId._id !== productId;
+      return item.productId?._id !== productId;
     });
     setCart(updatedCart);
+    setTotal(calculateTotal(updatedCart));
     try {
-      const response = await api.post("/cart/removeItem", {
+      await api.post("/cart/removeItem", {
         userId,
         productId,
       });
-      setCart(response.data.cart?.items || []);
+
       window.dispatchEvent(
         new CustomEvent("cartDelta", { detail: -removed.quantity }),
       );
-      loadCart();
     } catch (error: any) {
       setCart(previouCart);
       window.dispatchEvent(
