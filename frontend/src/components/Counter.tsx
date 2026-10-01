@@ -22,13 +22,12 @@ const Counter = ({
 
   const getClasses = (): string => {
     return count.value === 0
-      ? "bg-yellow-400 text-black"
-      : "bg-blue-600 text-white";
+      ? "bg-[#F3E6D5] text-[#800020]"
+      : "bg-[#800020] text-[#F3E6D5]";
   };
 
-
   return (
-    <div className="flex flex-row items-center mb-3">
+    <div className="flex flex-row items-center mb-3 gap-2">
       <button
         className="m-2 px-3 py-1.5 text-sm font-medium text-white bg-gray-600 rounded hover:bg-gray-700 transition"
         onClick={() => onDecrement(count)}
@@ -39,8 +38,7 @@ const Counter = ({
       <span
         className={`min-w-15 text-center px-3 py-1 text-sm font-semibold rounded-full ${getClasses()}`}
       >
-        {" "}
-        {formatCount()}{" "}
+        {formatCount()}
       </span>
 
       <button
@@ -51,7 +49,7 @@ const Counter = ({
       </button>
 
       <button
-        className="m-2 px-3 py-1.5 text-sm font-medium text-white bg-red-600 rounded hover:bg-red-700 transition"
+        className="m-2 px-3 py-1.5 text-sm font-medium  bg-[#800020] text-[#F3E6D5] hover:bg-[#92284A] rounded transition"
         onClick={() => onDelete(count.id)}
       >
         Delete

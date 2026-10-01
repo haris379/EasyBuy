@@ -26,14 +26,14 @@ const Counters = ({
     <>
       <div className=" flex justify-center items-center">
         <button
-          className="m-2 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 transition"
+          className="m-2 px-3 py-1.5 text-sm font-medium bg-[#800020] text-[#F3E6D5] rounded hover:bg-[#92284A] transition"
           onClick={onReset}
         >
           Reset
         </button>
 
         <button
-          className="m-2 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 transition"
+          className="m-2 px-3 py-1.5 text-sm font-medium bg-[#800020] text-[#F3E6D5] hover:bg-[#92284A] rounded transition"
           onClick={addCounter}
         >
           Add Counter

@@ -152,7 +152,7 @@ const CounterApp = () => {
     <>
       <h1 className="mt-5 sm:mt-6 mb-4 px-4 text-2xl sm:text-3xl font-bold text-center">
         Counter App
-        <span className="ml-2 px-2.5 py-0.5 text-xs sm:text-sm font-semibold text-white bg-blue-600 rounded-full">
+        <span className="ml-2 px-2.5 py-0.5 text-xs sm:text-sm font-semibold bg-[#800020] text-[#F3E6D5] rounded-full">
           {counters.filter((c) => c.value > 0).length}
         </span>
       </h1>
