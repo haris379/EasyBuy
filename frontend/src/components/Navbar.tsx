@@ -49,7 +49,14 @@ const Navbar = ({ onLogout }: NavbarProps) => {
         return;
       }
       const response = await api.get(`/cart/${id}`);
-      setCartCount(response.data.cart.items.length);
+
+      setCartCount(
+        response.data.cart.items.reduce(
+          (total: number, item: any) => total + item.quantity,
+          0,
+        ),
+      );
+      window.dispatchEvent(new Event("cartUpdated"));
     } catch (error) {
       console.error("Failed to load cart:", error);
       setCartCount(0);
