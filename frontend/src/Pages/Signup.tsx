@@ -8,6 +8,8 @@ interface FormObj {
   email: string;
   password: string;
 }
+const inputStyle =
+  "w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-[#5E162F] focus:ring-2 focus:ring-[#5E162F]/20";
 
 const Signup = () => {
   const [msg, setMsg] = useState<string>("");
@@ -52,7 +54,7 @@ const Signup = () => {
           </div>
 
           {msg && (
-            <div className="mb-5 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-center text-sm text-blue-700">
+            <div className="mb-5 rounded-lg bg-[#FBECEF] border border-[#E8B8C3] px-4 py-3 text-center text-sm text-[#8B2635]">
               {msg}
             </div>
           )}
@@ -68,7 +70,7 @@ const Signup = () => {
 
               <input
                 id="name"
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className={inputStyle}
                 type="text"
                 placeholder="Enter your name"
                 name="name"
@@ -88,7 +90,7 @@ const Signup = () => {
 
               <input
                 id="email"
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className={inputStyle}
                 type="email"
                 placeholder="Enter your email"
                 name="email"
@@ -108,7 +110,7 @@ const Signup = () => {
 
               <input
                 id="password"
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className={inputStyle}
                 type="password"
                 placeholder="Enter your password"
                 name="password"
@@ -120,7 +122,7 @@ const Signup = () => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
+              className="w-full py-3 bg-[#8B2635] hover:bg-[#A83A48] text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
             >
               Create Account
             </button>
@@ -131,7 +133,7 @@ const Signup = () => {
 
             <Link
               to="/login"
-              className="text-blue-600 hover:text-blue-700 font-semibold"
+              className="text-[#8B2635] hover:text-[#A83A48] font-semibold"
             >
               Login
             </Link>

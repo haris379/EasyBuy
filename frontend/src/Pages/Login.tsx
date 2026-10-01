@@ -2,13 +2,14 @@ import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-// import loadingAuthBar from "../assets/loadingAuth.gif";
 import LoadingBar from "../components/LoadingBar";
 
 interface FormObj {
   email: string;
   password: string;
 }
+const inputStyle =
+  "w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-[#5E162F] focus:ring-2 focus:ring-[#5E162F]/20";
 
 const Login = () => {
   const [form, setForm] = useState<FormObj>({
@@ -58,13 +59,12 @@ const Login = () => {
             </div>
             {loading ? (
               <div className="flex justify-center">
-                {/* <img src={loadingAuthBar} alt="Loading" /> */}
-                <LoadingBar/>
+                <LoadingBar />
               </div>
             ) : (
               <>
                 {msg && (
-                  <div className="mb-5 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-center text-sm text-blue-700">
+                  <div className="mb-5 rounded-lg bg-[#FBECEF] border border-[#E8B8C3] px-4 py-3 text-center text-sm text-[#8B2635]">
                     {msg}
                   </div>
                 )}
@@ -79,7 +79,7 @@ const Login = () => {
 
                     <input
                       id="email"
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                      className={inputStyle}
                       type="email"
                       placeholder="Enter your email"
                       name="email"
@@ -99,7 +99,7 @@ const Login = () => {
 
                     <input
                       id="password"
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                      className={inputStyle}
                       type="password"
                       placeholder="Enter your password"
                       name="password"
@@ -126,8 +126,8 @@ const Login = () => {
                     Signup
                   </Link>
                 </div>
-                <div className="text-center mt-2 text-sm text-gray-600">
-                  <span>Account not Verify? </span>
+                <div className="text-center mt-1 text-sm text-gray-600">
+                  <span>Account not Verified? </span>
 
                   <Link
                     to="/re-send-otp"

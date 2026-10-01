@@ -7,6 +7,9 @@ interface FormObj {
   password: string;
 }
 
+const inputStyle =
+  "w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-[#5E162F] focus:ring-2 focus:ring-[#5E162F]/20";
+
 const LoginWithID = () => {
   const { id } = useParams();
   const { state } = useLocation();
@@ -51,13 +54,15 @@ const LoginWithID = () => {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">Welcome {name}</h1>
+            <h1 className="text-3xl font-bold text-gray-800">
+              Welcome!<div>{name}</div>
+            </h1>
 
             <p className="text-gray-500 mt-2">Login to get started</p>
           </div>
 
           {msg && (
-            <div className="mb-5 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-center text-sm text-blue-700">
+            <div className="mb-5 rounded-lg bg-[#FBECEF] border border-[#E8B8C3] px-4 py-3 text-center text-sm text-[#8B2635]">
               {msg}
             </div>
           )}
@@ -73,7 +78,7 @@ const LoginWithID = () => {
 
               <input
                 id="email"
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className={inputStyle}
                 type="email"
                 placeholder="Enter your email"
                 name="email"
@@ -93,7 +98,7 @@ const LoginWithID = () => {
 
               <input
                 id="password"
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className={inputStyle}
                 type="password"
                 placeholder="Enter your password"
                 name="password"
@@ -105,7 +110,7 @@ const LoginWithID = () => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
+              className="w-full py-3 bg-[#8B2635] hover:bg-[#A83A48] text-white font-semibold rounded-lg transition duration-200 cursor-pointer"
             >
               Login
             </button>
@@ -116,7 +121,7 @@ const LoginWithID = () => {
 
             <Link
               to="/signup"
-              className="text-blue-600 hover:text-blue-700 font-semibold"
+              className="text-[#8B2635] hover:text-[#A83A48] font-semibold"
             >
               Signup
             </Link>
@@ -127,7 +132,7 @@ const LoginWithID = () => {
 
             <Link
               to="/re-send-otp"
-              className="text-blue-600 hover:text-blue-700 font-semibold"
+              className="text-[#8B2635] hover:text-[#A83A48] font-semibold"
             >
               Verify
             </Link>
