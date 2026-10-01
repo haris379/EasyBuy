@@ -51,7 +51,7 @@ const Home = () => {
   };
   const getAllCategories = async () => {
     try {
-      setLoading(true);
+      setLoading(true)
       const response = await api.get("/product/allCategories");
       setCategory(response.data.categories);
     } catch (error: any) {
@@ -65,13 +65,13 @@ const Home = () => {
 
   const handleCategoryChange = async (selectedcat: string) => {
     try {
-      setLoading(true);
-
-      if (!selectedcat) {
-        const response = await api.get("/product");
-        setProducts(response.data.products);
-        return;
-      }
+      setLoading(true)
+      
+    if (!selectedcat) {
+      const response = await api.get("/product");
+      setProducts(response.data.products);
+      return;
+    }
       const response = await api.get(
         `/product/categories?category=${encodeURIComponent(selectedcat)}`,
       );
@@ -99,7 +99,7 @@ const Home = () => {
         )}
       </div>
       <div
-        className="flex justify-center items-center"
+        className="flex justify-center items-center w-full rounded-2xl"
         onChange={(e: any) => handleCategoryChange(e.target.value)}
       >
         <select className=" border p-2 input-field sm:w-52">
@@ -128,7 +128,7 @@ const Home = () => {
               <img
                 src={product.image}
                 alt={product.title}
-                className="p-3 h-1/2 w-auto object-contain"
+                className="p-3 h-1/2 w-auto object-contain rounded-4xl"
               />
 
               <div className="m-4 font-semibold">
