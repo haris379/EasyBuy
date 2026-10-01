@@ -67,12 +67,10 @@ const CounterApp = () => {
     const previouCounters = [...counters];
     const updatedCounters = counters.map((count) => {
       if (count.id === counter.id) {
-        if (counter.value > 0) {
-          return {
-            ...count,
-            value: count.value - 1,
-          };
-        }
+        return {
+          ...count,
+          value: Math.max(0, count.value - 1),
+        };
       }
       return count;
     });
