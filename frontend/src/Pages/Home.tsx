@@ -4,8 +4,8 @@ import LoadingBar from "../components/LoadingBar";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
-  const [msg, setMsg] = useState<string>("");
   const [category, setCategory] = useState([]);
+  const [cart, setCart] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const loadProducts = async () => {
@@ -19,30 +19,35 @@ const Home = () => {
       setLoading(false);
     }
   };
-
-  const addToCart = async (productId: any) => {
+  const loadCart = async () => {
     try {
       const userId = localStorage.getItem("userId");
       if (!userId) {
-        alert("Please Login to continue");
+        setCart([]);
         return;
       }
-      const response = await api.post("/cart/addToCart", { userId, productId });
-      setMsg(response.data.message);
-      setTimeout(() => {
-        setMsg("");
-      }, 1000);
+      const response = await api.get(`/cart/${userId}`);
+      console.log(cart);
+      const items = response.data.cart.items || [];
+      setCart(items);
+    } catch (error: any) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      window.dispatchEvent(new Event("cartUpdated")); // <-- add this
+  const addToCart = async (productId: any) => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please Login to continue");
+      return;
+    }
 
-      // setCartCount(response.data.cart.items.length);
-
-      // setCartCount(
-      //   response.data.cart.items.reduce(
-      //     (total: number, item: any) => total + item.quantity,
-      //     0,
-      //   ),
-      // );
+    try {
+      await api.post("/cart/addToCart", { userId, productId });
+      await loadCart();
+      window.dispatchEvent(new Event("cartUpdated"));
     } catch (error: any) {
       console.log(
         error.response?.data?.message || "Error adding Product in Cart",
@@ -51,7 +56,7 @@ const Home = () => {
   };
   const getAllCategories = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await api.get("/product/allCategories");
       setCategory(response.data.categories);
     } catch (error: any) {
@@ -65,13 +70,13 @@ const Home = () => {
 
   const handleCategoryChange = async (selectedcat: string) => {
     try {
-      setLoading(true)
-      
-    if (!selectedcat) {
-      const response = await api.get("/product");
-      setProducts(response.data.products);
-      return;
-    }
+      setLoading(true);
+
+      if (!selectedcat) {
+        const response = await api.get("/product");
+        setProducts(response.data.products);
+        return;
+      }
       const response = await api.get(
         `/product/categories?category=${encodeURIComponent(selectedcat)}`,
       );
@@ -87,17 +92,11 @@ const Home = () => {
   useEffect(() => {
     loadProducts();
     getAllCategories();
+    loadCart();
   }, []);
 
   return (
     <>
-      <div className="m-6">
-        {msg && (
-          <div className="mb-5 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-center text-sm text-blue-700">
-            {msg}
-          </div>
-        )}
-      </div>
       <div
         className="flex justify-center items-center w-full rounded-2xl"
         onChange={(e: any) => handleCategoryChange(e.target.value)}
