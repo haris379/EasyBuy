@@ -7,7 +7,7 @@ interface NavbarProps {
 }
 
 const navBtn =
-  "btn-primary whitespace-nowrap px-2 py-1.5 text-center text-[11px] sm:px-4 sm:py-2 sm:text-sm hover:cursor-pointer" ;
+  "btn-primary whitespace-nowrap px-2 py-1.5 text-center text-[11px] sm:px-4 sm:py-2 sm:text-sm hover:cursor-pointer";
 
 const Navbar = ({ onLogout }: NavbarProps) => {
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
@@ -71,7 +71,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-[#800020] shadow-sm text-[#F3E6D5]">
+    <nav className="sticky top-0 z-50 w-auto bg-[#800020] shadow-[#800020] text-[#F3E6D5] m-5 rounded-3xl">
       <div className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8">
         <div className="relative flex min-h-15 items-center justify-between gap-2 py-2">
           <div className="flex shrink-0 flex-col items-start justify-center">
