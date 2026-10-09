@@ -83,7 +83,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-auto bg-[#800020] shadow-[#800020] text-[#F3E6D5] m-5 rounded-3xl">
+    <nav className="sticky top-0 z-50 w-auto bg-blue-500 shadow-[#800020] text-[#F3E6D5] m-5 rounded-3xl">
       <div className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8">
         <div className="relative flex min-h-15 items-center justify-between gap-2 py-2">
           <div className="flex shrink-0 flex-col items-start justify-center">
