@@ -7,6 +7,9 @@ export const getAllUser = async (req, res) => {
     if (users.length === 0) {
       return res.status(200).json({ message: "No User Registered" });
     }
+    // res.setHeader("X-myName", "MuhammadHaris"); //Custom Header
+    // // Good Practice : Always Add X to custom Headers
+    // console.log(req.headers);
     res.status(200).json({ message: "All Users Fetched", users });
   } catch (error) {
     res.status(500).json({ message: "Error Fetching Users", error });
