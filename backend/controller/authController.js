@@ -42,7 +42,7 @@ export const signup = async (req, res) => {
 
     await sendVerificationCode(user.email, verificationCode);
     await user.save();
-    res.status(200).json({
+    res.status(201).json({
       message: "User registered Successfully",
     });
   } catch (error) {
