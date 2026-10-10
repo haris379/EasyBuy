@@ -10,34 +10,14 @@ import counterRoutes from "./Routes/counterRoutes.js";
 import productRoutes from "./Routes/productRoutes.js";
 import cartRoutes from "./Routes/cartRoutes.js";
 import orderRoutes from "./Routes/orderRoutes.js";
+import logReqRes from "./middleware/index.js";
 
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_URL || "*" }));
-
-// app.use((req, res, next) => {
-//   console.log("Hello From middleware 1");
-//   req.myUserName = "MuhammadHaris.dev";
-//   next();
-// });
-
-// app.use((req, res, next) => {
-//   console.log("Hello From middleware 2", req.myUserName);
-//   next();
-// });
-
-// app.use((req, res, next) => {
-//   fs.appendFile(
-//     "log.txt",
-//     `\n${Date.now()} ${req.ip} : ${req.method} : ${req.path}`,
-//     (err, data) => {
-//       next();
-//     },
-//   );
-// });
-
+app.use(logReqRes("log.txt"));
 app.use(async (req, res, next) => {
   try {
     await connectDB();
