@@ -5,7 +5,6 @@ import LoadingBar from "../components/LoadingBar";
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
-  const [addingId, setAddingId] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const loadProducts = async () => {
@@ -26,8 +25,7 @@ const Home = () => {
       alert("Please Login to continue");
       return;
     }
-    if (addingId === productId) return;
-    setAddingId(productId);
+
     window.dispatchEvent(new CustomEvent("cartDelta", { detail: 1 }));
     try {
       await api.post("/cart/addToCart", { userId, productId });
@@ -36,8 +34,6 @@ const Home = () => {
       console.log(
         error.response?.data?.message || "Error adding Product in Cart",
       );
-    } finally {
-      setAddingId(null);
     }
   };
   const getAllCategories = async () => {
@@ -128,11 +124,8 @@ const Home = () => {
               <div className="text-center m-2 w-full">
                 <button
                   onClick={() => addToCart(product._id)}
-                  disabled={addingId === product._id}
                   className="inline-block w-60 py-3 bg-black text-white font-semibold rounded-lg transition duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {addingId === product._id ? "Adding..." : "Add to Cart"}
-                </button>
+                ></button>
               </div>
             </div>
           ))}
