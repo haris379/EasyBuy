@@ -44,6 +44,15 @@ const CounterApp = () => {
   }, [token]);
 
   const handleIncrement = async (counter: CounterObject) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      const coun = [...counters];
+      const indexOf = coun.indexOf(counter);
+      coun[indexOf] = { ...counter };
+      coun[indexOf].value++;
+      setCounters(coun);
+      return;
+    }
     const previouCounters = [...counters];
     const updatedCounters = counters.map((count) => {
       if (count.id === counter.id) {
@@ -67,10 +76,12 @@ const CounterApp = () => {
     const previouCounters = [...counters];
     const updatedCounters = counters.map((count) => {
       if (count.id === counter.id) {
-        return {
-          ...count,
-          value: Math.max(0, count.value - 1),
-        };
+        if (count.value > 0) {
+          return {
+            ...count,
+            value: count.value - 1,
+          };
+        }
       }
       return count;
     });
@@ -101,7 +112,7 @@ const CounterApp = () => {
     }
 
     const temporaryCounter: CounterObject = {
-      id: `temp-${Date.now()}`,
+      id: `${Date.now()}`,
       value: 0,
     };
 
@@ -109,7 +120,6 @@ const CounterApp = () => {
 
     try {
       const response = await api.post("/counter/add");
-      console.log(response.data);
       const newCounter = response.data.counter;
 
       if (newCounter) {
