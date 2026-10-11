@@ -9,8 +9,8 @@ import {
   updateProduct,
 } from "../controller/productController.js";
 
-import authMiddle from "../middleware/authMiddleware.js";
 import adminOnly from "../middleware/adminMiddleware.js";
+import { restrictToLoginUsersOnly } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -21,8 +21,13 @@ router.get("/", getAllProducts);
 router.get("/:id", getProduct);
 
 // Admin Routes
-router.post("/add-product", authMiddle, adminOnly, addProduct);
-router.delete("/delete/:id", authMiddle, adminOnly, deleteProduct);
-router.put("/update/:id", authMiddle, adminOnly, updateProduct);
+router.post("/add-product", restrictToLoginUsersOnly, adminOnly, addProduct);
+router.delete(
+  "/delete/:id",
+  restrictToLoginUsersOnly,
+  adminOnly,
+  deleteProduct,
+);
+router.put("/update/:id", restrictToLoginUsersOnly, adminOnly, updateProduct);
 
 export default router;
