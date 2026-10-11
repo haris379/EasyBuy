@@ -3,6 +3,7 @@ import Counter from "../model/Counter.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sendVerificationCode, sendWelcomeEmail } from "../middleware/Email.js";
+import { setUser } from "../services/authService.js";
 
 // Signup
 export const signup = async (req, res) => {
@@ -152,9 +153,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Incorrect Password" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRE_KEY, {
-      expiresIn: "5h",
-    });
+    const token = setUser(user);
 
     res.status(200).json({
       message: "Login Successfully",

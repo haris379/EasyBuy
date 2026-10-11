@@ -2,7 +2,6 @@ import "dotenv/config";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import express from "express";
-import fs from "fs";
 
 import authRoutes from "./Routes/authRoutes.js";
 import userRoutes from "./Routes/userRoutes.js";
@@ -10,14 +9,12 @@ import counterRoutes from "./Routes/counterRoutes.js";
 import productRoutes from "./Routes/productRoutes.js";
 import cartRoutes from "./Routes/cartRoutes.js";
 import orderRoutes from "./Routes/orderRoutes.js";
-import logReqRes from "./middleware/index.js";
 
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_URL || "*" }));
-app.use(logReqRes("log.txt"));
 app.use(async (req, res, next) => {
   try {
     await connectDB();

@@ -1,10 +1,15 @@
 import Counter from "../model/Counter.js";
+import User from "../model/User.js";
 
 // Fetch All Counter of a User
 export const getCounters = async (req, res) => {
   try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      res.status(400).json({ message: "user not found" });
+    }
     const counters = await Counter.find({
-      user: req.user.id,
+      user: user._id,
     });
     res.status(200).json({ message: "Counter Fetched Successfully", counters });
   } catch (error) {
@@ -15,14 +20,20 @@ export const getCounters = async (req, res) => {
 // Add Counter
 export const addCounter = async (req, res) => {
   try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      res.status(400).json({ message: "user not found" });
+    }
+
     const counter = await Counter.create({
       value: 0,
-      user: req.user._id,
-      name: req.user.name,
-      email: req.user.email,
+      user: user._id,
+      name: user.name,
+      email: user.email,
     });
     res.status(200).json({ message: "Counter created Successfully", counter });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Error Adding Counter", error });
   }
 };
@@ -31,10 +42,13 @@ export const addCounter = async (req, res) => {
 export const deleteCounter = async (req, res) => {
   try {
     const { id } = req.params;
-
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      res.status(400).json({ message: "user not found" });
+    }
     await Counter.findOneAndDelete({
       _id: id,
-      user: req.user._id,
+      user: user._id,
     });
 
     res.status(200).json({ message: "Counter deleted Successfully" });

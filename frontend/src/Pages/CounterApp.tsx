@@ -109,6 +109,7 @@ const CounterApp = () => {
 
     try {
       const response = await api.post("/counter/add");
+      console.log(response.data);
       const newCounter = response.data.counter;
 
       if (newCounter) {
@@ -128,7 +129,7 @@ const CounterApp = () => {
         prevCounters.filter((counter) => counter.id !== temporaryCounter.id),
       );
 
-      console.error("Error adding counter:", error);
+      console.log("Error adding counter:", error);
     }
   };
   const handleDelete = async (id: string | number) => {
