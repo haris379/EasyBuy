@@ -73,6 +73,19 @@ const CounterApp = () => {
   };
 
   const handleDecrement = async (counter: CounterObject) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      const coun = [...counters];
+      const indexOf = coun.indexOf(counter);
+      coun[indexOf] = { ...counter };
+      if (coun[indexOf].value > 0) {
+        coun[indexOf].value--;
+      } else {
+        coun[indexOf].value = 0;
+      }
+      setCounters(coun);
+      return;
+    }
     const previouCounters = [...counters];
     const updatedCounters = counters.map((count) => {
       if (count.id === counter.id) {
