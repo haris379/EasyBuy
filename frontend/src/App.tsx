@@ -25,6 +25,7 @@ const App = () => {
   const userId = localStorage.getItem("userId");
 
   const navigate = useNavigate();
+  // Logout
   const handlelogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
