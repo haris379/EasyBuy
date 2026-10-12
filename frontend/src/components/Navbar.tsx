@@ -1,89 +1,46 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api/axios.ts";
 
 interface NavbarProps {
   onLogout: () => void;
+  loadCart: () => void;
+  cartCount: number;
+  role: any;
 }
 
 const navBtn =
   "btn-primary whitespace-nowrap px-2 py-1.5 text-center text-[11px] sm:px-4 sm:py-2 sm:text-sm hover:cursor-pointer";
 
-const Navbar = ({ onLogout }: NavbarProps) => {
-  const [userId, setUserId] = useState(localStorage.getItem("userId"));
-  const [userName, setUserName] = useState(localStorage.getItem("userName"));
-  const [role, setRole] = useState(localStorage.getItem("role"));
-  const [cartCount, setCartCount] = useState(0);
+const Navbar = ({ onLogout, loadCart, cartCount, role }: NavbarProps) => {
+  const userId = localStorage.getItem("userId");
+  const userName = localStorage.getItem("userName");
   const [menuOpen, setMenuOpen] = useState(false);
-  const firstName = userName?.split(" ")[0];
-  const navigate = useNavigate();
 
   useEffect(() => {
     loadCart();
     const handleAuthChange = () => {
-      const id = localStorage.getItem("userId");
-      const name = localStorage.getItem("userName");
-      setUserId(id);
-      setUserName(name);
-      setRole(localStorage.getItem("role"));
-      if (id) {
+      const userId = localStorage.getItem("userId");
+      if (userId) {
         loadCart();
-      } else {
-        setCartCount(0);
       }
     };
 
-    const handleCartDelta = (e: Event) => {
-      const delta = (e as CustomEvent<number>).detail;
-      setCartCount((c) => Math.max(0, c + delta));
-    };
     window.addEventListener("authChanged", handleAuthChange);
-    window.addEventListener("cartUpdated", loadCart);
-    window.addEventListener("cartDelta", handleCartDelta);
     return () => {
       window.removeEventListener("authChanged", handleAuthChange);
-      window.removeEventListener("cartUpdated", loadCart);
-      window.removeEventListener("cartDelta", handleCartDelta);
     };
   }, []);
 
-  const loadCart = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      if (!token) return;
-      const id = localStorage.getItem("userId");
-      if (!id) {
-        setCartCount(0);
-        return;
-      }
-      const response = await api.get(`/cart/${id}`);
-
-      setCartCount(
-        response.data.cart.items.reduce(
-          (total: number, item: any) => total + item.quantity,
-          0,
-        ),
-      );
-    } catch (error) {
-      console.error("Failed to load cart:", error);
-      setCartCount(0);
-    }
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("role");
-    setUserId(null);
-    setUserName(null);
-    setRole(null);
-    setCartCount(0);
-    window.dispatchEvent(new Event("authChanged"));
-    onLogout();
-    navigate("/");
-  };
+  // const logout = () => {
+  //   localStorage.removeItem("token");
+  //   localStorage.removeItem("userId");
+  //   localStorage.removeItem("userName");
+  //   localStorage.removeItem("role");
+  //   setRole(null);
+  //   // window.dispatchEvent(new Event("authChanged"));
+  //   onLogout();
+  //   navigate("/");
+  // };
 
   return (
     <nav className="sticky top-0 z-50 w-auto bg-blue-500 shadow-[#800020] text-[#F3E6D5] m-5 rounded-3xl">
@@ -99,7 +56,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
 
             {userId && (
               <span className="max-w-22.5 truncate whitespace-nowrap text-[11px] font-medium leading-tight text-[#F3E6D5] sm:absolute sm:left-1/2 sm:top-1/2 sm:max-w-none sm:-translate-x-1/2 sm:-translate-y-1/2 sm:text-sm">
-                <span className="sm:hidden">Hi, {firstName}</span>
+                <span className="sm:hidden">Hi,{userName} </span>
                 <span className="hidden sm:inline">Welcome, {userName}</span>
               </span>
             )}
@@ -134,7 +91,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
             )}
 
             {userId ? (
-              <button onClick={logout} className={navBtn}>
+              <button onClick={onLogout} className={navBtn}>
                 Logout
               </button>
             ) : (
@@ -193,7 +150,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
               </>
             )}
             {userId ? (
-              <button onClick={logout} className={navBtn}>
+              <button onClick={onLogout} className={navBtn}>
                 Logout
               </button>
             ) : (
