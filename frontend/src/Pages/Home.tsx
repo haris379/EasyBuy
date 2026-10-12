@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
 
-const Home = () => {
+interface HomeProps {
+  addToCart: (productId: any) => void;
+}
+
+const Home = ({ addToCart }: HomeProps) => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -19,23 +23,6 @@ const Home = () => {
     }
   };
 
-  const addToCart = async (productId: any) => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-      alert("Please Login to continue");
-      return;
-    }
-
-    window.dispatchEvent(new CustomEvent("cartDelta", { detail: 1 }));
-    try {
-      await api.post("/cart/addToCart", { userId, productId });
-    } catch (error: any) {
-      window.dispatchEvent(new CustomEvent("cartDelta", { detail: -1 }));
-      console.log(
-        error.response?.data?.message || "Error adding Product in Cart",
-      );
-    }
-  };
   const getAllCategories = async () => {
     try {
       setLoading(true);
