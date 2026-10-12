@@ -10,8 +10,8 @@ import { restrictToLoginUsersOnly } from "../middleware/auth.js";
 const router = express.Router();
 
 router.post("/addToCart", restrictToLoginUsersOnly, addItem);
-router.post("/removeItem", removeItem);
-router.get("/:userId", getCart);
+router.post("/removeItem", restrictToLoginUsersOnly, removeItem);
+router.get("/:userId", restrictToLoginUsersOnly, getCart);
 router.put("/increase/:productId", increaseQunatity);
 router.put("/decrease/:productId", decreaseQunatity);
 

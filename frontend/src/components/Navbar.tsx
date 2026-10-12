@@ -49,6 +49,9 @@ const Navbar = ({ onLogout }: NavbarProps) => {
 
   const loadCart = async () => {
     try {
+      const token = localStorage.getItem("token");
+
+      if (!token) return;
       const id = localStorage.getItem("userId");
       if (!id) {
         setCartCount(0);
