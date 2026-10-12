@@ -42,6 +42,7 @@ const App = () => {
     if (!userId || !token || role === "admin") {
       return;
     }
+    setLoading(true);
     try {
       const response = await api.get(`/cart/${userId}`);
       setUserCart(response.data.cart.items);
