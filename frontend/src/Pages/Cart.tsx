@@ -1,166 +1,48 @@
-import { useEffect, useState } from "react";
-import api from "../api/axios";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
 import IncrementBtn from "../components/IncrementBtn";
 import DecrementBtn from "../components/DecrementBtn";
 
-const Cart = () => {
-  const [cart, setCart] = useState<any>([]);
-  const [total, setTotal] = useState(0);
-
-  const [loading, setLoading] = useState<boolean>(true);
+interface CartProps {
+  loadCart: () => void;
+  removeItem: (productId: any) => void;
+  increaseQuantity: (productId: any) => void;
+  decreaseQuantity: (productId: any) => void;
+  userCart: any[];
+  loading: boolean;
+  total: number;
+}
+const Cart = ({
+  loadCart,
+  removeItem,
+  increaseQuantity,
+  decreaseQuantity,
+  userCart,
+  loading,
+  total,
+}: CartProps) => {
   const navigate = useNavigate();
 
-  const calculateTotal = (items: any[]) => {
-    return items.reduce((total: any, item: any) => {
-      return total + item.quantity * item.productId.price;
-    }, 0);
-  };
-
-  const loadCart = async () => {
-    try {
-      const userId = localStorage.getItem("userId");
-      if (!userId) {
-        alert("Please login first");
-        return;
-      }
-      const response = await api.get(`/cart/${userId}`);
-      console.log(response.data.cart);
-      const items = response.data.cart.items || [];
-      setCart(items);
-      setTotal(calculateTotal(items));
-    } catch (error: any) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const removeItem = async (productId: any) => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-      alert("Please login first");
-      return;
-    }
-    const previouCart = [...cart];
-    const removed = cart.find((item: any) => item.productId?._id === productId);
-    if (!removed) return;
-    const updatedCart = cart.filter((item: any) => {
-      return item.productId?._id !== productId;
-    });
-    setCart(updatedCart);
-    setTotal(calculateTotal(updatedCart));
-    try {
-      await api.post("/cart/removeItem", {
-        userId,
-        productId,
-      });
-
-      window.dispatchEvent(
-        new CustomEvent("cartDelta", { detail: -removed.quantity }),
-      );
-    } catch (error: any) {
-      setCart(previouCart);
-      window.dispatchEvent(
-        new CustomEvent("cartDelta", { detail: removed.quantity }),
-      );
-      console.error(error);
-    }
-  };
-
-  const increaseQuantity = async (productId: any) => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-      alert("Please login first");
-      return;
-    }
-    const previouCart = cart.map((item: any) => ({ ...item }));
-
-    const updatedCart = cart.map((item: any) => {
-      if (item.productId._id === productId) {
-        return {
-          ...item,
-          quantity: item.quantity + 1,
-        };
-      }
-      return item;
-    });
-    setCart(updatedCart);
-    setTotal(calculateTotal(updatedCart));
-
-    window.dispatchEvent(new CustomEvent("cartDelta", { detail: 1 }));
-
-    try {
-      await api.put(`/cart/increase/${productId}`, { userId });
-    } catch (error) {
-      setCart(previouCart);
-      setTotal(calculateTotal(previouCart));
-      window.dispatchEvent(new CustomEvent("cartDelta", { detail: -1 }));
-
-      console.error(error);
-    }
-  };
-
-  const decreaseQuantity = async (productId: any) => {
-    const userId = localStorage.getItem("userId");
-
-    if (!userId) {
-      alert("Please login first");
-      return;
-    }
-
-    const previousCart = [...cart];
-
-    const currentItem = cart.find(
-      (item: any) => item?.productId?._id === productId,
-    );
-
-    if (!currentItem) return;
-    if (currentItem.quantity === 1) {
-      const updatedCart = cart.filter(
-        (item: any) => item?.productId?._id !== productId,
-      );
-
-      setCart(updatedCart);
-      setTotal(calculateTotal(updatedCart));
-      window.dispatchEvent(new CustomEvent("cartDelta", { detail: -1 }));
-
-      try {
-        await api.put(`/cart/decrease/${productId}`, { userId });
-      } catch (error) {
-        setCart(previousCart);
-        setTotal(calculateTotal(previousCart));
-        window.dispatchEvent(new CustomEvent("cartDelta", { detail: 1 }));
-
-        console.error(error);
-      }
-
-      return;
-    }
-    const updatedCart = cart.map((item: any) => {
-      if (item?.productId?._id === productId) {
-        return {
-          ...item,
-          quantity: item.quantity - 1,
-        };
-      }
-
-      return item;
-    });
-
-    setCart(updatedCart);
-    setTotal(calculateTotal(updatedCart));
-    window.dispatchEvent(new Event("cartUpdated"));
-
-    try {
-      await api.put(`/cart/decrease/${productId}`, { userId });
-    } catch (error) {
-      setCart(previousCart);
-      setTotal(calculateTotal(previousCart));
-      console.error(error);
-    }
-  };
+  // const loadCart = async () => {
+  //   try {
+  //     const userId = localStorage.getItem("userId");
+  //     if (!userId) {
+  //       alert("Please login first");
+  //       return;
+  //     }
+  //     const response = await api.get(`/cart/${userId}`);
+  //     console.log(response.data.cart);
+  //     const items = response.data.cart.items || [];
+  //     setCart(items);
+  //     setTotal(calculateTotal(items));
+  //   } catch (error: any) {
+  //     console.log(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleOrder = async () => {
     const userId = localStorage.getItem("userId");
@@ -168,26 +50,26 @@ const Cart = () => {
       alert("Please login first");
       return;
     }
-    if (cart.length === 0) {
+    if (userCart.length === 0) {
       return;
     }
     try {
-      setLoading(true);
+      // setLoading(true);
       const userId = localStorage.getItem("userId");
       await api.post(`/order/placeOrder`, { userId });
 
       window.dispatchEvent(new Event("cartUpdated"));
 
-      setCart([]);
-      setTotal(0);
-      setLoading(true);
+      // setCart([]);
+      // setTotal(0);
+      // setLoading(true);
 
       setTimeout(() => {
         navigate("/orderPlaced");
       }, 1000);
     } catch (error: any) {
       console.error(error.response?.data?.message || "An error occurred");
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -206,14 +88,15 @@ const Cart = () => {
             <div className="text-center flex justify-center items-center">
               <LoadingBar />
             </div>
-          ) : cart.length === 0 ? (
+          ) : userCart.length === 0 ? (
             <div className="card py-12 text-center">
               <p className="text-ink-soft">Your cart is empty</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {cart.map((item: any) => {
+              {userCart.map((item: any) => {
                 if (!item.productId) return null;
+                console.log(item.productId);
                 return (
                   <div
                     key={item._id}
@@ -293,7 +176,7 @@ const Cart = () => {
           <div className="flex justify-center">
             <button
               onClick={() => handleOrder()}
-              disabled={cart.length === 0 || loading}
+              disabled={userCart.length === 0 || loading}
               className="w-1/2 py-3 m-5 bg-[#7A1F3D] hover:bg-[#92284A] text-[#F3E6D5] text-center font-semibold rounded-lg  duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               Place Order
