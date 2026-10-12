@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface NavbarProps {
   onLogout: () => void;
@@ -30,17 +30,6 @@ const Navbar = ({ onLogout, loadCart, cartCount, role }: NavbarProps) => {
       window.removeEventListener("authChanged", handleAuthChange);
     };
   }, []);
-
-  // const logout = () => {
-  //   localStorage.removeItem("token");
-  //   localStorage.removeItem("userId");
-  //   localStorage.removeItem("userName");
-  //   localStorage.removeItem("role");
-  //   setRole(null);
-  //   // window.dispatchEvent(new Event("authChanged"));
-  //   onLogout();
-  //   navigate("/");
-  // };
 
   return (
     <nav className="sticky top-0 z-50 w-auto bg-blue-500 shadow-[#800020] text-[#F3E6D5] m-5 rounded-3xl">
