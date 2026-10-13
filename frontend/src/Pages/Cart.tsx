@@ -1,14 +1,14 @@
-import { useNavigate } from "react-router-dom";
-import api from "../api/axios";
+import { useEffect, useState } from "react";
+
 import LoadingBar from "../components/LoadingBar";
 import IncrementBtn from "../components/IncrementBtn";
 import DecrementBtn from "../components/DecrementBtn";
-import { useEffect, useState } from "react";
 
 interface CartProps {
   removeItem: (productId: any) => void;
   increaseQuantity: (productId: any) => void;
   decreaseQuantity: (productId: any) => void;
+  handleOrder: () => void;
   loadCart: () => void;
   userCart: any[];
   loading: boolean;
@@ -17,42 +17,13 @@ const Cart = ({
   removeItem,
   increaseQuantity,
   decreaseQuantity,
+  handleOrder,
   loadCart,
   userCart,
   loading,
 }: CartProps) => {
   const [total, setTotal] = useState(0);
-  const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
-
-  const handleOrder = async () => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-      alert("Please login first");
-      return;
-    }
-    if (userCart.length === 0) {
-      return;
-    }
-    try {
-      // setLoading(true);
-      const userId = localStorage.getItem("userId");
-      await api.post(`/order/placeOrder`, { userId });
-
-      window.dispatchEvent(new Event("cartUpdated"));
-
-      // setCart([]);
-      // setTotal(0);
-      // setLoading(true);
-
-      setTimeout(() => {
-        navigate("/orderPlaced");
-      }, 1000);
-    } catch (error: any) {
-      console.error(error.response?.data?.message || "An error occurred");
-      // setLoading(false);
-    }
-  };
 
   useEffect(() => {
     if (!userId) {
