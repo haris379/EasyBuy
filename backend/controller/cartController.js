@@ -79,7 +79,6 @@ export const getCart = async (req, res) => {
 };
 
 // Increase Product Quantity
-
 export const increaseQunatity = async (req, res) => {
   try {
     const { userId } = req.body;
@@ -133,5 +132,26 @@ export const decreaseQunatity = async (req, res) => {
     res
       .status(500)
       .json({ message: "Error Decreases Quantity of Product in Cart", error });
+  }
+};
+
+export const getTotalAmount = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    let cart = await Cart.findOne({ userId }).populate("items.productId");
+
+    if (!cart) {
+      return res.status(404).json({ message: "No Cart Found" });
+    }
+
+    const total = cart.items.reduce((total, item) => {
+      return total + item.productId.price * item.quantity;
+    }, 0);
+    return res.status(200).json({ message: "Total amount calculated", total });
+    // console.log(total);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error Calculation Total", error });
   }
 };
