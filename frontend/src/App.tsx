@@ -22,7 +22,6 @@ const App = () => {
   const [cartCount, setCartCount] = useState(0);
   const [userCart, setUserCart] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [total, setTotal] = useState(0);
   const [role, setRole] = useState(localStorage.getItem("role"));
 
   const token = localStorage.getItem("token");
@@ -67,12 +66,6 @@ const App = () => {
     }
   };
 
-  const calculateTotal = (items: any[]) => {
-    return items.reduce((total: any, item: any) => {
-      return total + item.quantity * item.productId.price;
-    }, 0);
-  };
-
   const addToCart = async (productId: any) => {
     if (!userId || !token) {
       alert("Please Login to continue");
@@ -109,12 +102,10 @@ const App = () => {
     });
     setCartCount(cartCount + 1);
     setUserCart(updatedCart);
-    setTotal(calculateTotal(updatedCart));
     try {
       await api.put(`/cart/increase/${productId}`, { userId });
     } catch (error) {
       setUserCart(previouCart);
-      setTotal(calculateTotal(previouCart));
       console.error(error);
     }
   };
@@ -144,18 +135,15 @@ const App = () => {
     });
     setCartCount(cartCount - 1);
     setUserCart(updatedCart);
-    setTotal(calculateTotal(updatedCart));
     try {
       await api.put(`/cart/decrease/${productId}`, { userId });
     } catch (error) {
       setUserCart(previouCart);
-      setTotal(calculateTotal(previouCart));
       console.error(error);
     }
   };
 
   const removeItem = async (productId: any) => {
-    const userId = localStorage.getItem("userId");
     if (!userId) {
       alert("Please login first");
       return;
@@ -170,7 +158,6 @@ const App = () => {
     });
     setUserCart(updatedCart);
     setCartCount(cartCount - removed.quantity);
-    setTotal(calculateTotal(updatedCart));
     try {
       await api.post("/cart/removeItem", {
         userId,
@@ -184,6 +171,10 @@ const App = () => {
   };
 
   useEffect(() => {
+    if (!userId) {
+      alert("Please Login to add items in your cart");
+      return;
+    }
     setCartCount(cartCount);
     loadCart();
   }, []);
@@ -220,7 +211,6 @@ const App = () => {
               loadCart={loadCart}
               userCart={userCart}
               loading={loading}
-              total={total}
             />
           }
         />

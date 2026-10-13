@@ -3,7 +3,7 @@ import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
 import IncrementBtn from "../components/IncrementBtn";
 import DecrementBtn from "../components/DecrementBtn";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface CartProps {
   removeItem: (productId: any) => void;
@@ -12,17 +12,16 @@ interface CartProps {
   loadCart: () => void;
   userCart: any[];
   loading: boolean;
-  total: number;
 }
 const Cart = ({
   removeItem,
   increaseQuantity,
   decreaseQuantity,
+  loadCart,
   userCart,
   loading,
-  total,
-  loadCart,
 }: CartProps) => {
+  const [total, setTotal] = useState(0);
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
 
@@ -54,13 +53,20 @@ const Cart = ({
       // setLoading(false);
     }
   };
+
   useEffect(() => {
-    if (!userId) {
-      alert("Please Login to add items in your cart");
-      return;
-    }
     loadCart();
   }, []);
+
+  useEffect(() => {
+    const totalPrice = userCart.reduce((total, item) => {
+      if (!item.productId) return total;
+
+      return total + item.quantity * item.productId.price;
+    }, 0);
+
+    setTotal(totalPrice);
+  }, [userCart]);
 
   return (
     <>
