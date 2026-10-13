@@ -170,6 +170,28 @@ const App = () => {
     }
   };
 
+  const handleOrder = async () => {
+    if (!userId) {
+      alert("Please login first");
+      return;
+    }
+    if (userCart.length === 0) {
+      return;
+    }
+    try {
+      setLoading(true);
+      await api.post(`/order/placeOrder`, { userId });
+      setUserCart([]);
+      setTimeout(() => {
+        navigate("/orderPlaced");
+      });
+    } catch (error: any) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setCartCount(cartCount);
     loadCart();
@@ -207,6 +229,7 @@ const App = () => {
               loadCart={loadCart}
               userCart={userCart}
               loading={loading}
+              handleOrder={handleOrder}
             />
           }
         />
