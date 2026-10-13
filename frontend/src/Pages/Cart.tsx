@@ -55,6 +55,10 @@ const Cart = ({
   };
 
   useEffect(() => {
+    if (!userId) {
+      alert("Please Login to add items in your cart");
+      return;
+    }
     loadCart();
   }, []);
 

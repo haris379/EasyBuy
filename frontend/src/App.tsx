@@ -171,10 +171,6 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (!userId) {
-      alert("Please Login to add items in your cart");
-      return;
-    }
     setCartCount(cartCount);
     loadCart();
   }, []);
