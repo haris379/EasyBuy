@@ -33,14 +33,16 @@ const App = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("userName");
     localStorage.removeItem("role");
-    setRole(null);
     setUserCart([]);
+    setCartCount(0);
+    setRole(null);
     navigate("/");
   };
 
   const loadCart = async () => {
     if (!userId) {
-      alert("Please Login to add items in your cart");
+      // alert("Please Login to add items in your cart");
+      setLoading(false);
       return;
     }
     setLoading(true);
