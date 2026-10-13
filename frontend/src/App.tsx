@@ -39,7 +39,8 @@ const App = () => {
   };
 
   const loadCart = async () => {
-    if (!userId || !token || role === "admin") {
+    if (!userId) {
+      alert("Please Login to add items in your cart");
       return;
     }
     setLoading(true);
@@ -217,6 +218,7 @@ const App = () => {
               removeItem={removeItem}
               increaseQuantity={increaseQuantity}
               decreaseQuantity={decreaseQuantity}
+              loadCart={loadCart}
               userCart={userCart}
               loading={loading}
               total={total}

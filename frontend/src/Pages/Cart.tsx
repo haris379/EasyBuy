@@ -3,10 +3,13 @@ import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
 import IncrementBtn from "../components/IncrementBtn";
 import DecrementBtn from "../components/DecrementBtn";
+import { useEffect } from "react";
 
-interface CartProps {  removeItem: (productId: any) => void;
+interface CartProps {
+  removeItem: (productId: any) => void;
   increaseQuantity: (productId: any) => void;
   decreaseQuantity: (productId: any) => void;
+  loadCart: () => void;
   userCart: any[];
   loading: boolean;
   total: number;
@@ -18,8 +21,10 @@ const Cart = ({
   userCart,
   loading,
   total,
+  loadCart,
 }: CartProps) => {
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
 
   // const loadCart = async () => {
   //   try {
@@ -68,8 +73,10 @@ const Cart = ({
       // setLoading(false);
     }
   };
+  useEffect(() => {
+    loadCart();
+  }, []);
 
- 
   return (
     <>
       <div className="min-h-[70vh]">
@@ -81,6 +88,12 @@ const Cart = ({
           {loading ? (
             <div className="text-center flex justify-center items-center">
               <LoadingBar />
+            </div>
+          ) : !userId ? (
+            <div className="card py-12 text-center">
+              <p className="text-ink-soft">
+                Please Login to add items your cart
+              </p>
             </div>
           ) : userCart.length === 0 ? (
             <div className="card py-12 text-center">
