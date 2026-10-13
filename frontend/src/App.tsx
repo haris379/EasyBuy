@@ -1,4 +1,7 @@
+import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
+import api from "./api/axios.ts";
+
 import Signup from "./Pages/Signup";
 import LoginWithID from "./Pages/LoginWithID";
 import AddProduct from "./Pages/admin/AddProduct.tsx";
@@ -7,14 +10,13 @@ import EditProduct from "./Pages/admin/EditProduct.tsx";
 import Home from "./Pages/Home.tsx";
 import Cart from "./Pages/Cart.tsx";
 import CounterApp from "./Pages/CounterApp.tsx";
-import Navbar from "./components/Navbar.tsx";
 import Login from "./Pages/Login.tsx";
 import Verification from "./Pages/Verification.tsx";
-import AdminRoute from "./components/AdminRoutes.tsx";
-import ResendCode from "./Pages/ResendCode.tsx";
 import OrderPlaced from "./Pages/OrderPlaced.tsx";
-import { useState, useEffect } from "react";
-import api from "./api/axios.ts";
+import ResendCode from "./Pages/ResendCode.tsx";
+
+import Navbar from "./components/Navbar.tsx";
+import AdminRoute from "./components/AdminRoutes.tsx";
 
 const App = () => {
   const [cartCount, setCartCount] = useState(0);
@@ -27,7 +29,7 @@ const App = () => {
   const userId = localStorage.getItem("userId");
 
   const navigate = useNavigate();
-  // Logout
+
   const handlelogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
@@ -41,7 +43,6 @@ const App = () => {
 
   const loadCart = async () => {
     if (!userId) {
-      // alert("Please Login to add items in your cart");
       setLoading(false);
       return;
     }
@@ -159,7 +160,7 @@ const App = () => {
       alert("Please login first");
       return;
     }
-    const previouCart = [...userCart];
+    setLoading(true);
     const removed = userCart.find(
       (item: any) => item.productId?._id === productId,
     );
@@ -168,26 +169,22 @@ const App = () => {
       return item.productId?._id !== productId;
     });
     setUserCart(updatedCart);
-    // setTotal(calculateTotal(updatedCart));
+    setCartCount(cartCount - removed.quantity);
+    setTotal(calculateTotal(updatedCart));
     try {
       await api.post("/cart/removeItem", {
         userId,
         productId,
       });
-
-      // window.dispatchEvent(
-      //   new CustomEvent("cartDelta", { detail: -removed.quantity }),
-      // );
     } catch (error: any) {
-      setUserCart(previouCart);
-      // window.dispatchEvent(
-      //   new CustomEvent("cartDelta", { detail: removed.quantity }),
-      // );
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
+    setCartCount(cartCount);
     loadCart();
   }, []);
 
