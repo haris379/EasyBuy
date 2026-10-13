@@ -26,25 +26,6 @@ const Cart = ({
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
 
-  // const loadCart = async () => {
-  //   try {
-  //     const userId = localStorage.getItem("userId");
-  //     if (!userId) {
-  //       alert("Please login first");
-  //       return;
-  //     }
-  //     const response = await api.get(`/cart/${userId}`);
-  //     console.log(response.data.cart);
-  //     const items = response.data.cart.items || [];
-  //     setCart(items);
-  //     setTotal(calculateTotal(items));
-  //   } catch (error: any) {
-  //     console.log(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleOrder = async () => {
     const userId = localStorage.getItem("userId");
     if (!userId) {
