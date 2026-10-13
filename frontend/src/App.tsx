@@ -42,7 +42,7 @@ const App = () => {
     if (!userId || !token || role === "admin") {
       return;
     }
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await api.get(`/cart/${userId}`);
       setUserCart(response.data.cart.items);
@@ -52,7 +52,10 @@ const App = () => {
           0,
         ),
       );
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Failed to load cart:", error);
+      console.error("Backend response:", error.response?.data);
+      console.error("Status:", error.response?.status);
       console.log("Failed to load cart:", error);
       setCartCount(0);
     } finally {
@@ -210,7 +213,6 @@ const App = () => {
           path="/cart"
           element={
             <Cart
-              loadCart={loadCart}
               removeItem={removeItem}
               increaseQuantity={increaseQuantity}
               decreaseQuantity={decreaseQuantity}

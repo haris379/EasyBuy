@@ -1,13 +1,10 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
 import IncrementBtn from "../components/IncrementBtn";
 import DecrementBtn from "../components/DecrementBtn";
 
-interface CartProps {
-  loadCart: () => void;
-  removeItem: (productId: any) => void;
+interface CartProps {  removeItem: (productId: any) => void;
   increaseQuantity: (productId: any) => void;
   decreaseQuantity: (productId: any) => void;
   userCart: any[];
@@ -15,7 +12,6 @@ interface CartProps {
   total: number;
 }
 const Cart = ({
-  loadCart,
   removeItem,
   increaseQuantity,
   decreaseQuantity,
@@ -73,9 +69,7 @@ const Cart = ({
     }
   };
 
-  useEffect(() => {
-    loadCart();
-  }, []);
+ 
   return (
     <>
       <div className="min-h-[70vh]">
