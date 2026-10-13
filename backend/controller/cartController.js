@@ -104,6 +104,7 @@ export const increaseQunatity = async (req, res) => {
   }
 };
 
+// Decrease Product Quantity
 export const decreaseQunatity = async (req, res) => {
   try {
     const { userId } = req.body;
@@ -135,6 +136,7 @@ export const decreaseQunatity = async (req, res) => {
   }
 };
 
+// Calculate Total Amount
 export const getTotalAmount = async (req, res) => {
   try {
     const { userId } = req.params;
