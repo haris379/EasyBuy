@@ -88,7 +88,6 @@ const Cart = ({
             <div className="space-y-4">
               {userCart.map((item: any) => {
                 if (!item.productId) return null;
-                console.log(item.productId);
                 return (
                   <div
                     key={item._id}
