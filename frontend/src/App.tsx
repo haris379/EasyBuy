@@ -42,7 +42,7 @@ const App = () => {
     if (!userId || !token || role === "admin") {
       return;
     }
-    // setLoading(true);
+    setLoading(true);
     try {
       const response = await api.get(`/cart/${userId}`);
       setUserCart(response.data.cart.items);
@@ -126,6 +126,7 @@ const App = () => {
     if (!item) return;
     if (item.quantity <= 1) {
       removeItem(productId);
+      setCartCount(cartCount - 1);
       return;
     }
     const updatedCart = userCart.map((item: any) => {
