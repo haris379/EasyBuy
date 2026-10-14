@@ -53,7 +53,6 @@ const CounterApp = () => {
       setCounters(coun);
       return;
     }
-    const previouCounters = [...counters];
     const updatedCounters = counters.map((count) => {
       if (count.id === counter.id) {
         return {
@@ -67,8 +66,7 @@ const CounterApp = () => {
     try {
       await api.put(`/counter/increment/${counter.id}`);
     } catch (error) {
-      setCounters(previouCounters);
-      console.error("Error Incrementing Value");
+      console.error("Error Incrementing Value", error);
     }
   };
 
@@ -86,7 +84,6 @@ const CounterApp = () => {
       setCounters(coun);
       return;
     }
-    const previouCounters = [...counters];
     const updatedCounters = counters.map((count) => {
       if (count.id === counter.id) {
         if (count.value > 0) {
@@ -102,8 +99,7 @@ const CounterApp = () => {
     try {
       await api.put(`/counter/decrement/${counter.id}`);
     } catch (error) {
-      setCounters(previouCounters);
-      console.error("Error Decrementing Value");
+      console.error("Error Decrementing Value", error);
     }
   };
 
@@ -117,8 +113,6 @@ const CounterApp = () => {
   };
 
   const handleAdd = async () => {
-    const token = localStorage.getItem("token");
-
     if (!token) {
       alert("Please login to continue");
       return;
@@ -156,7 +150,10 @@ const CounterApp = () => {
     }
   };
   const handleDelete = async (id: string | number) => {
-    const previouCounters = [...counters];
+    if (!token) {
+      alert("Please login to continue");
+      return;
+    }
     const updatedCounters = counters.filter((count) => {
       return count.id !== id;
     });
@@ -164,11 +161,7 @@ const CounterApp = () => {
     try {
       await api.delete(`/counter/${id}`);
     } catch (error: any) {
-      setCounters(previouCounters);
       console.error("Error deleting counter:", error);
-      if (error.response?.status === 401) {
-        alert("Please login to continue");
-      }
     }
   };
 
