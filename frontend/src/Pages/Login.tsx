@@ -40,7 +40,6 @@ const Login = () => {
       localStorage.setItem("userName", response.data.user.name);
       localStorage.setItem("role", response.data.user.role);
       navigate("/");
-      window.dispatchEvent(new Event("authChanged"));
     } catch (error: any) {
       console.log(error);
       setMsg(error.response?.data?.message || "An error occurred");
