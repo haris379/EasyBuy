@@ -57,10 +57,6 @@ const App = () => {
       );
     } catch (error: any) {
       console.error("Failed to load cart:", error);
-      console.error("Backend response:", error.response?.data);
-      console.error("Status:", error.response?.status);
-      console.log("Failed to load cart:", error);
-      setCartCount(0);
     } finally {
       setLoading(false);
     }
@@ -80,17 +76,15 @@ const App = () => {
     try {
       await api.post("/cart/addToCart", { userId, productId });
     } catch (error: any) {
-      console.log("Error adding Product in Cart", error);
+      console.error("Error adding Product in Cart", error);
     }
   };
 
   const increaseQuantity = async (productId: any) => {
-    const userId = localStorage.getItem("userId");
     if (!userId) {
       alert("Please login first");
       return;
     }
-    const previouCart = userCart.map((item: any) => ({ ...item }));
     const updatedCart = userCart.map((item: any) => {
       if (item.productId._id === productId) {
         return {
@@ -105,8 +99,7 @@ const App = () => {
     try {
       await api.put(`/cart/increase/${productId}`, { userId });
     } catch (error) {
-      setUserCart(previouCart);
-      console.error(error);
+      console.error("Error in increasing Quantity of Product in Cart", error);
     }
   };
 
@@ -116,7 +109,6 @@ const App = () => {
       alert("Please login first");
       return;
     }
-    const previouCart = userCart.map((item: any) => ({ ...item }));
     const item = userCart.find((item: any) => item.productId._id === productId);
     if (!item) return;
     if (item.quantity <= 1) {
@@ -138,8 +130,7 @@ const App = () => {
     try {
       await api.put(`/cart/decrease/${productId}`, { userId });
     } catch (error) {
-      setUserCart(previouCart);
-      console.error(error);
+      console.error("Error in decreasing Quantity of Product in Cart", error);
     }
   };
 
@@ -164,7 +155,7 @@ const App = () => {
         productId,
       });
     } catch (error: any) {
-      console.error(error);
+      console.error("Error in Removing Product from Cart", error);
     } finally {
       setLoading(false);
     }
@@ -188,7 +179,7 @@ const App = () => {
         navigate("/orderPlaced");
       });
     } catch (error: any) {
-      console.error(error);
+      console.error("Error in Placing order", error);
     } finally {
       setLoading(false);
     }
