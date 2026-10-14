@@ -178,10 +178,12 @@ const App = () => {
     if (userCart.length === 0) {
       return;
     }
+    setLoading(true);
+    setCartCount(0);
     try {
-      setLoading(true);
       await api.post(`/order/placeOrder`, { userId });
       setUserCart([]);
+      setCartCount(0);
       setTimeout(() => {
         navigate("/orderPlaced");
       });
