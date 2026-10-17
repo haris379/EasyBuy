@@ -29,10 +29,10 @@ const App = () => {
   const userCartContext = useContext(UserCartContext);
   const LoadingCont = useContext(LoadingContext);
 
+  const userId = localStorage.getItem("userId");
   const { setCartCount } = cart;
   const { userCart, setUserCart } = userCartContext;
   const { setLoading } = LoadingCont;
-  const userId = localStorage.getItem("userId");
 
   const navigate = useNavigate();
 
