@@ -89,10 +89,6 @@ const Home = ({ userCart, loadCart }: HomeProps) => {
     getAllCategories();
   }, []);
 
-  useEffect(() => {
-    setCartCount(cartCount);
-  }, []);
-
   return (
     <>
       <div
