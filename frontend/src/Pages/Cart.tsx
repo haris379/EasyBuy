@@ -1,29 +1,138 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../api/axios.ts";
 
 import LoadingBar from "../components/LoadingBar";
 import IncrementBtn from "../components/IncrementBtn";
 import DecrementBtn from "../components/DecrementBtn";
 
+import { CartContext } from "../context/Cart";
+import { UserCartContext } from "../context/UserCart.tsx";
+import { LoadingContext } from "../context/LoadingContext.tsx";
+
 interface CartProps {
-  removeItem: (productId: any) => void;
-  increaseQuantity: (productId: any) => void;
-  decreaseQuantity: (productId: any) => void;
-  handleOrder: () => void;
   loadCart: () => void;
-  userCart: any[];
-  loading: boolean;
 }
-const Cart = ({
-  removeItem,
-  increaseQuantity,
-  decreaseQuantity,
-  handleOrder,
-  loadCart,
-  userCart,
-  loading,
-}: CartProps) => {
-  const [total, setTotal] = useState(0);
+
+const Cart = ({ loadCart }: CartProps) => {
   const userId = localStorage.getItem("userId");
+
+  const [total, setTotal] = useState(0);
+
+  const cart = useContext(CartContext);
+  const userCartContext = useContext(UserCartContext);
+  const loadingCont = useContext(LoadingContext);
+
+  const navigate = useNavigate();
+
+  const { cartCount, setCartCount } = cart;
+  const { userCart, setUserCart } = userCartContext;
+  const { loading, setLoading } = loadingCont;
+
+  const increaseQuantity = async (productId: any) => {
+    if (!userId) {
+      alert("Please login first");
+      return;
+    }
+    const updatedCart = userCart.map((item: any) => {
+      if (item.productId._id === productId) {
+        return {
+          ...item,
+          quantity: item.quantity + 1,
+        };
+      }
+      return item;
+    });
+    setCartCount(cartCount + 1);
+    setUserCart(updatedCart);
+    try {
+      await api.put(`/cart/increase/${productId}`, { userId });
+    } catch (error) {
+      console.error("Error in increasing Quantity of Product in Cart", error);
+    }
+  };
+
+  const decreaseQuantity = async (productId: any) => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please login first");
+      return;
+    }
+    const item = userCart.find((item: any) => item.productId._id === productId);
+    if (!item) return;
+    if (item.quantity <= 1) {
+      removeItem(productId);
+      setCartCount(cartCount - 1);
+      return;
+    }
+    const updatedCart = userCart.map((item: any) => {
+      if (item.productId._id === productId) {
+        return {
+          ...item,
+          quantity: item.quantity - 1,
+        };
+      }
+      return item;
+    });
+    setCartCount(cartCount - 1);
+    setUserCart(updatedCart);
+    try {
+      await api.put(`/cart/decrease/${productId}`, { userId });
+    } catch (error) {
+      console.error("Error in decreasing Quantity of Product in Cart", error);
+    }
+  };
+
+  const removeItem = async (productId: any) => {
+    if (!userId) {
+      alert("Please login first");
+      return;
+    }
+    setLoading(true);
+    const removed = userCart.find(
+      (item: any) => item.productId?._id === productId,
+    );
+    if (!removed) return;
+    const updatedCart = userCart.filter((item: any) => {
+      return item.productId?._id !== productId;
+    });
+    setUserCart(updatedCart);
+    setCartCount(cartCount - removed.quantity);
+    try {
+      await api.post("/cart/removeItem", {
+        userId,
+        productId,
+      });
+    } catch (error: any) {
+      console.error("Error in Removing Product from Cart", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOrder = async () => {
+    if (!userId) {
+      alert("Please login first");
+      return;
+    }
+    if (userCart.length === 0) {
+      return;
+    }
+    setLoading(true);
+    setCartCount(0);
+    try {
+      await api.post(`/order/placeOrder`, { userId });
+      setUserCart([]);
+      setCartCount(0);
+      setTimeout(() => {
+        navigate("/orderPlaced");
+      });
+    } catch (error: any) {
+      console.error("Error in Placing order", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!userId) {
