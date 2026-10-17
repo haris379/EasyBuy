@@ -8,13 +8,16 @@ type CartContextType = {
   setCartCount: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const CartContext = createContext<CartContextType | null>(null);
+export const CartContext = createContext<CartContextType>({
+  cartCount: 0,
+  setCartCount: () => {},
+});
 
 export const CartProvider = (props: ContainerProps) => {
   const [cartCount, setCartCount] = useState<number>(0);
   return (
-    <CartContext value={{ cartCount, setCartCount }}>
+    <CartContext.Provider value={{ cartCount, setCartCount }}>
       {props.children}
-    </CartContext>
+    </CartContext.Provider>
   );
 };

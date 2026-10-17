@@ -1,22 +1,28 @@
-import { useState, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+
+import { CartContext } from "../context/Cart";
 
 interface NavbarProps {
   onLogout: () => void;
   loadCart: () => void;
-  cartCount: number;
   role: any;
 }
 
 const navBtn =
   "btn-primary whitespace-nowrap px-2 py-1.5 text-center text-[11px] sm:px-4 sm:py-2 sm:text-sm hover:cursor-pointer";
 
-const Navbar = ({ onLogout, loadCart, cartCount, role }: NavbarProps) => {
+const Navbar = ({ onLogout, loadCart, role }: NavbarProps) => {
   const userId = localStorage.getItem("userId");
   const userName = localStorage.getItem("userName");
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const cart = useContext(CartContext);
+
+  const { cartCount, setCartCount } = cart;
+
   useEffect(() => {
+    setCartCount(cartCount);
     loadCart();
     const handleAuthChange = () => {
       const userId = localStorage.getItem("userId");

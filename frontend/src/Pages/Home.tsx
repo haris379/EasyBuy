@@ -1,16 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
+import { CartContext } from "../context/Cart";
 
 interface HomeProps {
-  addToCart: (productId: any) => void;
+  userCart: any[];
+  loadCart: () => void;
 }
 
-const Home = ({ addToCart }: HomeProps) => {
+const Home = ({ userCart, loadCart }: HomeProps) => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
+  const cart = useContext(CartContext);
+
+  const { cartCount, setCartCount } = cart;
   const loadProducts = async () => {
     try {
       const response = await api.get("/product");
@@ -58,9 +65,32 @@ const Home = ({ addToCart }: HomeProps) => {
       setLoading(false);
     }
   };
+
+  const addToCart = async (productId: any) => {
+    if (!userId || !token) {
+      alert("Please Login to continue");
+      return;
+    }
+    userCart.map((item: any) => {
+      if (item.productId._id === productId) {
+        return { item, quantity: item.quantity + 1 };
+      }
+    });
+    setCartCount(cartCount + 1);
+    try {
+      await api.post("/cart/addToCart", { userId, productId });
+    } catch (error: any) {
+      console.log("Error adding Product in Cart", error);
+    }
+  };
   useEffect(() => {
+    loadCart();
     loadProducts();
     getAllCategories();
+  }, []);
+
+  useEffect(() => {
+    setCartCount(cartCount);
   }, []);
 
   return (
