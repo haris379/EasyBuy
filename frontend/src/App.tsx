@@ -20,7 +20,7 @@ import ResendCode from "./Pages/ResendCode.tsx";
 import Navbar from "./components/Navbar.tsx";
 import AdminRoute from "./components/AdminRoutes.tsx";
 
-import { useAppDispatch } from "./reduxStore/cartHooks.ts";
+import { useAppDispatch, useAppSelector } from "./reduxStore/cartHooks.ts";
 import { setCartCount } from "./reduxStore/cartSlice.ts";
 import { setUserCart } from "./reduxStore/userCart.ts";
 import { setLoading } from "./reduxStore/loadingSlice.ts";
@@ -30,6 +30,7 @@ const App = () => {
   const [role, setRole] = useState(localStorage.getItem("role"));
   const navigate = useNavigate();
 
+  const cartCount = useAppSelector((state) => state.cartCount.cartCount);
   const dispatch = useAppDispatch();
 
   const handlelogout = () => {
@@ -48,6 +49,7 @@ const App = () => {
       dispatch(setLoading(false));
       return;
     }
+    dispatch(setCartCount(cartCount));
     dispatch(setLoading(true));
     try {
       const response = await api.get(`/cart/${userId}`);
