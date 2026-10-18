@@ -1,15 +1,16 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import api from "../api/axios.ts";
 
-import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks.ts";
 import LoadingBar from "../components/LoadingBar";
 import IncrementBtn from "../components/IncrementBtn";
 import DecrementBtn from "../components/DecrementBtn";
 
-import { UserCartContext } from "../context/UserCart.tsx";
-import { LoadingContext } from "../context/LoadingContext.tsx";
+import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks.ts";
 import { increment, decrement, setCartCount } from "../reduxStore/cartSlice.ts";
+import { setUserCart } from "../reduxStore/userCart.ts";
+import { setLoading } from "../reduxStore/loadingSlice.ts";
 
 interface CartProps {
   loadCart: () => void;
@@ -17,16 +18,13 @@ interface CartProps {
 
 const Cart = ({ loadCart }: CartProps) => {
   const userId = localStorage.getItem("userId");
-  const [total, setTotal] = useState(0);
   const navigate = useNavigate();
+  const [total, setTotal] = useState(0);
 
-  const userCartContext = useContext(UserCartContext);
-  const loadingCont = useContext(LoadingContext);
-
-  const { userCart, setUserCart } = userCartContext;
-  const { loading, setLoading } = loadingCont;
 
   const cartCount = useAppSelector((state) => state.cartCount.cartCount);
+  const userCart: any = useAppSelector((state) => state.userCart.userCart);
+  const loading = useAppSelector((state) => state.loadingSlice.loading);
   const dispatch = useAppDispatch();
 
   const increaseQuantity = async (productId: any) => {
@@ -43,8 +41,9 @@ const Cart = ({ loadCart }: CartProps) => {
       }
       return item;
     });
+    console.log(updatedCart);
     dispatch(increment());
-    setUserCart(updatedCart);
+    dispatch(setUserCart(updatedCart));
     try {
       await api.put(`/cart/increase/${productId}`, { userId });
     } catch (error) {
@@ -75,7 +74,7 @@ const Cart = ({ loadCart }: CartProps) => {
       return item;
     });
     dispatch(decrement());
-    setUserCart(updatedCart);
+    dispatch(setUserCart(updatedCart));
     try {
       await api.put(`/cart/decrease/${productId}`, { userId });
     } catch (error) {
@@ -88,7 +87,8 @@ const Cart = ({ loadCart }: CartProps) => {
       alert("Please login first");
       return;
     }
-    setLoading(true);
+    dispatch(setLoading(true));
+
     const removed = userCart.find(
       (item: any) => item.productId?._id === productId,
     );
@@ -96,7 +96,7 @@ const Cart = ({ loadCart }: CartProps) => {
     const updatedCart = userCart.filter((item: any) => {
       return item.productId?._id !== productId;
     });
-    setUserCart(updatedCart);
+    dispatch(setUserCart(updatedCart));
     dispatch(setCartCount(cartCount - removed.quantity));
     try {
       await api.post("/cart/removeItem", {
@@ -106,7 +106,7 @@ const Cart = ({ loadCart }: CartProps) => {
     } catch (error: any) {
       console.error("Error in Removing Product from Cart", error);
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 
@@ -118,8 +118,9 @@ const Cart = ({ loadCart }: CartProps) => {
     if (userCart.length === 0) {
       return;
     }
-    setLoading(true);
-    setCartCount(0);
+    dispatch(setLoading(true));
+    dispatch(setCartCount(0));
+    dispatch(setUserCart([]));
     try {
       await api.post(`/order/placeOrder`, { userId });
       setUserCart([]);
@@ -130,7 +131,7 @@ const Cart = ({ loadCart }: CartProps) => {
     } catch (error: any) {
       console.error("Error in Placing order", error);
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 
@@ -143,7 +144,7 @@ const Cart = ({ loadCart }: CartProps) => {
   }, []);
 
   useEffect(() => {
-    const totalPrice = userCart.reduce((total, item) => {
+    const totalPrice = userCart.reduce((total: any, item: any) => {
       if (!item.productId) return total;
 
       return total + item.quantity * item.productId.price;
