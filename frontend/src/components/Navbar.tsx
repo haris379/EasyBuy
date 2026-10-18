@@ -1,28 +1,24 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-import { CartContext } from "../context/Cart";
+import { useAppSelector } from "../reduxStore/cartHooks";
 
 interface NavbarProps {
-  onLogout: () => void;
   loadCart: () => void;
+  onlogout: () => void;
   role: any;
 }
 
 const navBtn =
   "btn-primary whitespace-nowrap px-2 py-1.5 text-center text-[11px] sm:px-4 sm:py-2 sm:text-sm hover:cursor-pointer";
 
-const Navbar = ({ onLogout, loadCart, role }: NavbarProps) => {
+const Navbar = ({ loadCart, onlogout, role }: NavbarProps) => {
   const userId = localStorage.getItem("userId");
   const userName = localStorage.getItem("userName");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const cart = useContext(CartContext);
-
-  const { cartCount, setCartCount } = cart;
+  const cartCount = useAppSelector((state) => state.cartCount.cartCount);
 
   useEffect(() => {
-    setCartCount(cartCount);
     loadCart();
     const handleAuthChange = () => {
       const userId = localStorage.getItem("userId");
@@ -86,7 +82,7 @@ const Navbar = ({ onLogout, loadCart, role }: NavbarProps) => {
             )}
 
             {userId ? (
-              <button onClick={onLogout} className={navBtn}>
+              <button onClick={onlogout} className={navBtn}>
                 Logout
               </button>
             ) : (
@@ -145,7 +141,7 @@ const Navbar = ({ onLogout, loadCart, role }: NavbarProps) => {
               </>
             )}
             {userId ? (
-              <button onClick={onLogout} className={navBtn}>
+              <button onClick={onlogout} className={navBtn}>
                 Logout
               </button>
             ) : (
