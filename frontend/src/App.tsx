@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { reset } from "./reduxStore/cartSlice.ts";
 
@@ -20,24 +20,18 @@ import ResendCode from "./Pages/ResendCode.tsx";
 import Navbar from "./components/Navbar.tsx";
 import AdminRoute from "./components/AdminRoutes.tsx";
 
-import { UserCartContext } from "./context/UserCart.tsx";
-import { LoadingContext } from "./context/LoadingContext.tsx";
 import { useAppDispatch } from "./reduxStore/cartHooks.ts";
-
 import { setCartCount } from "./reduxStore/cartSlice.ts";
+import { setUserCart } from "./reduxStore/userCart.ts";
+import { setLoading } from "./reduxStore/loadingSlice.ts";
 
 const App = () => {
-  const [role, setRole] = useState(localStorage.getItem("role"));
-  const userCartContext = useContext(UserCartContext);
-  const LoadingCont = useContext(LoadingContext);
-
   const userId = localStorage.getItem("userId");
-
-  const { userCart, setUserCart } = userCartContext;
-  const { setLoading } = LoadingCont;
-
+  const [role, setRole] = useState(localStorage.getItem("role"));
   const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
+
   const handlelogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
@@ -51,13 +45,13 @@ const App = () => {
 
   const loadCart = async () => {
     if (!userId) {
-      setLoading(false);
+      dispatch(setLoading(false));
       return;
     }
-    setLoading(true);
+    dispatch(setLoading(true));
     try {
       const response = await api.get(`/cart/${userId}`);
-      setUserCart(response.data.cart.items);
+      dispatch(setUserCart(response.data.cart.items));
 
       dispatch(
         setCartCount(
@@ -70,7 +64,7 @@ const App = () => {
     } catch (error: any) {
       console.error("Failed to load cart:", error);
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 
@@ -82,10 +76,7 @@ const App = () => {
     <>
       <Navbar loadCart={loadCart} role={role} onlogout={handlelogout} />
       <Routes>
-        <Route
-          path="/"
-          element={<Home userCart={userCart} loadCart={loadCart} />}
-        />
+        <Route path="/" element={<Home loadCart={loadCart} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify" element={<Verification />} />
         <Route path="/re-send-otp" element={<ResendCode />} />
