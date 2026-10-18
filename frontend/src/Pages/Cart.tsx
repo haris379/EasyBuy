@@ -6,9 +6,10 @@ import LoadingBar from "../components/LoadingBar";
 import IncrementBtn from "../components/IncrementBtn";
 import DecrementBtn from "../components/DecrementBtn";
 
-import { CartContext } from "../context/Cart";
 import { UserCartContext } from "../context/UserCart.tsx";
 import { LoadingContext } from "../context/LoadingContext.tsx";
+import { increment, decrement, setCartCount } from "../reduxStore/cartSlice.ts";
+import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks.ts";
 
 interface CartProps {
   loadCart: () => void;
@@ -16,18 +17,18 @@ interface CartProps {
 
 const Cart = ({ loadCart }: CartProps) => {
   const userId = localStorage.getItem("userId");
-
   const [total, setTotal] = useState(0);
 
-  const cart = useContext(CartContext);
   const userCartContext = useContext(UserCartContext);
   const loadingCont = useContext(LoadingContext);
 
   const navigate = useNavigate();
 
-  const { cartCount, setCartCount } = cart;
   const { userCart, setUserCart } = userCartContext;
   const { loading, setLoading } = loadingCont;
+
+  const cartCount = useAppSelector((state) => state.cartCount.cartCount);
+  const dispatch = useAppDispatch();
 
   const increaseQuantity = async (productId: any) => {
     if (!userId) {
@@ -43,7 +44,7 @@ const Cart = ({ loadCart }: CartProps) => {
       }
       return item;
     });
-    setCartCount(cartCount + 1);
+    dispatch(increment());
     setUserCart(updatedCart);
     try {
       await api.put(`/cart/increase/${productId}`, { userId });
@@ -74,7 +75,7 @@ const Cart = ({ loadCart }: CartProps) => {
       }
       return item;
     });
-    setCartCount(cartCount - 1);
+    dispatch(decrement());
     setUserCart(updatedCart);
     try {
       await api.put(`/cart/decrease/${productId}`, { userId });
@@ -97,7 +98,7 @@ const Cart = ({ loadCart }: CartProps) => {
       return item.productId?._id !== productId;
     });
     setUserCart(updatedCart);
-    setCartCount(cartCount - removed.quantity);
+    dispatch(setCartCount(cartCount - removed.quantity));
     try {
       await api.post("/cart/removeItem", {
         userId,
