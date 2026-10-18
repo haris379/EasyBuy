@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios.ts";
 
+import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks.ts";
 import LoadingBar from "../components/LoadingBar";
 import IncrementBtn from "../components/IncrementBtn";
 import DecrementBtn from "../components/DecrementBtn";
@@ -9,7 +10,6 @@ import DecrementBtn from "../components/DecrementBtn";
 import { UserCartContext } from "../context/UserCart.tsx";
 import { LoadingContext } from "../context/LoadingContext.tsx";
 import { increment, decrement, setCartCount } from "../reduxStore/cartSlice.ts";
-import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks.ts";
 
 interface CartProps {
   loadCart: () => void;
@@ -18,11 +18,10 @@ interface CartProps {
 const Cart = ({ loadCart }: CartProps) => {
   const userId = localStorage.getItem("userId");
   const [total, setTotal] = useState(0);
+  const navigate = useNavigate();
 
   const userCartContext = useContext(UserCartContext);
   const loadingCont = useContext(LoadingContext);
-
-  const navigate = useNavigate();
 
   const { userCart, setUserCart } = userCartContext;
   const { loading, setLoading } = loadingCont;
