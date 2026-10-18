@@ -4,6 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
 
+import { setLoading } from "../reduxStore/loadingSlice";
+import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
+
 interface FormObj {
   name: string;
   email: string;
@@ -14,14 +17,14 @@ const inputStyle =
 
 const Signup = () => {
   const [msg, setMsg] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
-
+  const loading = useAppSelector((state) => state.loadingSlice.loading);
   const [form, setForm] = useState<FormObj>({
     name: "",
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -32,7 +35,7 @@ const Signup = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(setLoading(true));
     setTimeout(() => {
       setMsg("");
     }, 1000);
@@ -42,7 +45,7 @@ const Signup = () => {
     } catch (error: any) {
       setMsg(error.response?.data?.message || "An error occurred");
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 

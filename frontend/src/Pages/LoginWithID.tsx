@@ -1,8 +1,12 @@
-import { useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
+
 import api from "../api/axios";
+
 import LoadingBar from "../components/LoadingBar";
+
+import { setLoading } from "../reduxStore/loadingSlice";
+import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
 
 interface FormObj {
   password: string;
@@ -14,13 +18,17 @@ const inputStyle =
 const LoginWithID = () => {
   const { id } = useParams();
   const { state } = useLocation();
+
   const { name, email } = state;
   const [msg, setMsg] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const loading = useAppSelector((state) => state.loadingSlice.loading);
+
+  const dispatch = useAppDispatch();
   const [form, setForm] = useState<FormObj>({
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -31,7 +39,7 @@ const LoginWithID = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(setLoading(true));
     setTimeout(() => {
       setMsg("");
     }, 1000);
@@ -46,7 +54,7 @@ const LoginWithID = () => {
       console.log(error);
       setMsg(error.response?.data?.message || "An error occurred");
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 

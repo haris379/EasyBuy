@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
+
+import api from "../api/axios.ts";
+
 import Counters from "../components/Counters.tsx";
 import ProfileCard from "../components/ProfileCard.tsx";
-import api from "../api/axios.ts";
 import LoadingBar from "../components/LoadingBar.tsx";
+
+import { setLoading } from "../reduxStore/loadingSlice.ts";
+import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks.ts";
 interface CounterObject {
   id: number | string;
   value: number;
@@ -16,13 +21,15 @@ const guestCounters = [
 const CounterApp = () => {
   const token = localStorage.getItem("token");
   const [counters, setCounters] = useState<CounterObject[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const loading = useAppSelector((state) => state.loadingSlice.loading);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const loadCounters = async () => {
       if (!token) {
         setCounters(guestCounters);
-        setLoading(false);
+        dispatch(setLoading(false));
         return;
       }
       try {
@@ -36,7 +43,7 @@ const CounterApp = () => {
       } catch (error) {
         console.error("Error loading counters:", error);
       } finally {
-        setLoading(false);
+        dispatch(setLoading(false));
       }
     };
 

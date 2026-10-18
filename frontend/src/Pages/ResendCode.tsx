@@ -1,19 +1,26 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+
 import api from "../api/axios";
+
 import LoadingBar from "../components/LoadingBar";
+
+import { setLoading } from "../reduxStore/loadingSlice";
+import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
 
 const inputStyle =
   "w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-[#5E162F] focus:ring-2 focus:ring-[#5E162F]/20";
 
 const ResendCode = () => {
   const [msg, setMsg] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const loading = useAppSelector((state) => state.loadingSlice.loading);
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
   });
+
+  const dispatch = useAppDispatch();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -24,7 +31,7 @@ const ResendCode = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(setLoading(true));
     setTimeout(() => {
       setMsg("");
     }, 1000);
@@ -40,6 +47,8 @@ const ResendCode = () => {
       navigate("/verify");
     } catch (error: any) {
       setMsg(error.response?.data?.message || "An error occurred");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
