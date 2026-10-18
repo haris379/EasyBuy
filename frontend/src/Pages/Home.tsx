@@ -22,6 +22,7 @@ const Home = ({ loadCart }: HomeProps) => {
   const dispatch = useAppDispatch();
 
   const loadProducts = async () => {
+    dispatch(setLoading(true));
     try {
       const response = await api.get("/product");
 
@@ -34,8 +35,8 @@ const Home = ({ loadCart }: HomeProps) => {
   };
 
   const getAllCategories = async () => {
+    dispatch(setLoading(true));
     try {
-      setLoading(true);
       const response = await api.get("/product/allCategories");
       setCategory(response.data.categories);
     } catch (error: any) {
@@ -43,14 +44,13 @@ const Home = ({ loadCart }: HomeProps) => {
         error.response?.data?.message || "Error filtering products",
       );
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 
   const handleCategoryChange = async (selectedcat: string) => {
+    dispatch(setLoading(true));
     try {
-      setLoading(true);
-
       if (!selectedcat) {
         const response = await api.get("/product");
         setProducts(response.data.products);
@@ -65,7 +65,7 @@ const Home = ({ loadCart }: HomeProps) => {
         error.response?.data?.message || "Error filtering products",
       );
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 
