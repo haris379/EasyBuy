@@ -1,22 +1,24 @@
 import { useState, useEffect } from "react";
+
 import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
+
 import { increment } from "../reduxStore/cartSlice";
 import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
+import { setLoading } from "../reduxStore/loadingSlice";
 
 interface HomeProps {
-  userCart: any[];
   loadCart: () => void;
 }
 
-const Home = ({ userCart, loadCart }: HomeProps) => {
+const Home = ({ loadCart }: HomeProps) => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
 
-  useAppSelector((state) => state.cartCount);
+  const userCart: any = useAppSelector((state) => state.userCart.userCart);
+  const loading = useAppSelector((state) => state.loadingSlice.loading);
   const dispatch = useAppDispatch();
 
   const loadProducts = async () => {
