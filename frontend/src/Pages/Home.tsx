@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
-import { CartContext } from "../context/Cart";
+import { increment } from "../reduxStore/cartSlice";
+import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
 
 interface HomeProps {
   userCart: any[];
@@ -15,9 +16,9 @@ const Home = ({ userCart, loadCart }: HomeProps) => {
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
 
-  const cart = useContext(CartContext);
+  useAppSelector((state) => state.cartCount);
+  const dispatch = useAppDispatch();
 
-  const { cartCount, setCartCount } = cart;
   const loadProducts = async () => {
     try {
       const response = await api.get("/product");
@@ -76,7 +77,8 @@ const Home = ({ userCart, loadCart }: HomeProps) => {
         return { item, quantity: item.quantity + 1 };
       }
     });
-    setCartCount(cartCount + 1);
+
+    dispatch(increment());
     try {
       await api.post("/cart/addToCart", { userId, productId });
     } catch (error: any) {
