@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
+import { reset } from "./reduxStore/cartSlice.ts";
 
 import api from "./api/axios.ts";
 
@@ -19,30 +20,31 @@ import ResendCode from "./Pages/ResendCode.tsx";
 import Navbar from "./components/Navbar.tsx";
 import AdminRoute from "./components/AdminRoutes.tsx";
 
-import { CartContext } from "./context/Cart";
 import { UserCartContext } from "./context/UserCart.tsx";
 import { LoadingContext } from "./context/LoadingContext.tsx";
+import { useAppDispatch } from "./reduxStore/cartHooks.ts";
+
+import { setCartCount } from "./reduxStore/cartSlice.ts";
 
 const App = () => {
   const [role, setRole] = useState(localStorage.getItem("role"));
-  const cart = useContext(CartContext);
   const userCartContext = useContext(UserCartContext);
   const LoadingCont = useContext(LoadingContext);
 
   const userId = localStorage.getItem("userId");
-  const { setCartCount } = cart;
+
   const { userCart, setUserCart } = userCartContext;
   const { setLoading } = LoadingCont;
 
   const navigate = useNavigate();
-
+  const dispatch = useAppDispatch();
   const handlelogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("userName");
     localStorage.removeItem("role");
     setUserCart([]);
-    setCartCount(0);
+    dispatch(reset());
     setRole(null);
     navigate("/");
   };
@@ -53,14 +55,16 @@ const App = () => {
       return;
     }
     setLoading(true);
-
     try {
       const response = await api.get(`/cart/${userId}`);
       setUserCart(response.data.cart.items);
-      setCartCount(
-        response.data.cart.items.reduce(
-          (total: number, item: any) => total + item.quantity,
-          0,
+
+      dispatch(
+        setCartCount(
+          response.data.cart.items.reduce(
+            (total: number, item: any) => total + item.quantity,
+            0,
+          ),
         ),
       );
     } catch (error: any) {
@@ -76,7 +80,7 @@ const App = () => {
 
   return (
     <>
-      <Navbar onLogout={handlelogout} loadCart={loadCart} role={role} />
+      <Navbar loadCart={loadCart} role={role} onlogout={handlelogout} />
       <Routes>
         <Route
           path="/"
