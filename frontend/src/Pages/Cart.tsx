@@ -143,7 +143,7 @@ const Cart = ({ loadCart }: CartProps) => {
     }
     loadCart();
   }, []);
-
+  
   useEffect(() => {
     dispatch(
       setTotal(

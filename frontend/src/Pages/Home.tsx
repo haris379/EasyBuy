@@ -5,7 +5,7 @@ import LoadingBar from "../components/LoadingBar";
 
 import { increment } from "../reduxStore/cartSlice";
 import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
-import { setLoading } from "../reduxStore/loadingSlice";
+import { setLoading } from "../reduxStore/loadingSlice.ts";
 
 interface HomeProps {
   loadCart: () => void;
@@ -19,6 +19,7 @@ const Home = ({ loadCart }: HomeProps) => {
 
   const userCart: any = useAppSelector((state) => state.userCart.userCart);
   const loading = useAppSelector((state) => state.loadingSlice.loading);
+
   const dispatch = useAppDispatch();
 
   const loadProducts = async () => {
@@ -87,6 +88,7 @@ const Home = ({ loadCart }: HomeProps) => {
       console.log("Error adding Product in Cart", error);
     }
   };
+
   useEffect(() => {
     loadCart();
     loadProducts();

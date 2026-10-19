@@ -21,12 +21,13 @@ import Navbar from "./components/Navbar.tsx";
 import AdminRoute from "./components/AdminRoutes.tsx";
 
 import { useAppDispatch, useAppSelector } from "./reduxStore/cartHooks.ts";
-import { setCartCount } from "./reduxStore/cartSlice.ts";
 import { setUserCart } from "./reduxStore/userCart.ts";
 import { setLoading } from "./reduxStore/loadingSlice.ts";
+import { setCartCount } from "./reduxStore/cartSlice.ts";
 
 const App = () => {
   const userId = localStorage.getItem("userId");
+
   const [role, setRole] = useState(localStorage.getItem("role"));
   const navigate = useNavigate();
 
