@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import api from "../api/axios.ts";
@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks.ts";
 import { increment, decrement, setCartCount } from "../reduxStore/cartSlice.ts";
 import { setUserCart } from "../reduxStore/userCart.ts";
 import { setLoading } from "../reduxStore/loadingSlice.ts";
+import { setTotal } from "../reduxStore/userCart.ts";
 
 interface CartProps {
   loadCart: () => void;
@@ -18,14 +19,14 @@ interface CartProps {
 
 const Cart = ({ loadCart }: CartProps) => {
   const userId = localStorage.getItem("userId");
-  const navigate = useNavigate();
-  const [total, setTotal] = useState(0);
-
 
   const cartCount = useAppSelector((state) => state.cartCount.cartCount);
   const userCart: any = useAppSelector((state) => state.userCart.userCart);
   const loading = useAppSelector((state) => state.loadingSlice.loading);
+  const total = useAppSelector((state) => state.userCart.total);
   const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
 
   const increaseQuantity = async (productId: any) => {
     if (!userId) {
@@ -144,13 +145,15 @@ const Cart = ({ loadCart }: CartProps) => {
   }, []);
 
   useEffect(() => {
-    const totalPrice = userCart.reduce((total: any, item: any) => {
-      if (!item.productId) return total;
+    dispatch(
+      setTotal(
+        userCart.reduce((total: any, item: any) => {
+          if (!item.productId) return total;
 
-      return total + item.quantity * item.productId.price;
-    }, 0);
-
-    setTotal(totalPrice);
+          return total + item.quantity * item.productId.price;
+        }, 0),
+      ),
+    );
   }, [userCart]);
 
   return (
