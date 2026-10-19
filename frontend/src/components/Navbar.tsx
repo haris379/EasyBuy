@@ -14,12 +14,11 @@ const navBtn =
 const Navbar = ({ loadCart, onlogout, role }: NavbarProps) => {
   const userId = localStorage.getItem("userId");
   const userName = localStorage.getItem("userName");
-  const [menuOpen, setMenuOpen] = useState(false);
 
+  const [menuOpen, setMenuOpen] = useState(false);
   const cartCount = useAppSelector((state) => state.cartCount.cartCount);
 
   useEffect(() => {
-    loadCart();
     const handleAuthChange = () => {
       const userId = localStorage.getItem("userId");
       if (userId) {
@@ -31,6 +30,9 @@ const Navbar = ({ loadCart, onlogout, role }: NavbarProps) => {
     return () => {
       window.removeEventListener("authChanged", handleAuthChange);
     };
+  }, []);
+  useEffect(() => {
+    loadCart();
   }, []);
 
   return (
