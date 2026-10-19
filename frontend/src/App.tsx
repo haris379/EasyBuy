@@ -50,7 +50,7 @@ const App = () => {
       return;
     }
     dispatch(setCartCount(cartCount));
-
+    dispatch(setLoading(true));
     try {
       const response = await api.get(`/cart/${userId}`);
       dispatch(setUserCart(response.data.cart.items));
