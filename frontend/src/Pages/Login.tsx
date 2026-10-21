@@ -51,9 +51,6 @@ const Login = () => {
           role: response.data.user.role,
         }),
       );
-      // localStorage.setItem("userId", response.data.user.id);
-      // localStorage.setItem("userName", response.data.user.name);
-      // localStorage.setItem("role", response.data.user.role);
       navigate("/");
     } catch (error: any) {
       console.log(error);
