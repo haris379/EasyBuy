@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import api from "./api/axios.ts";
@@ -20,10 +20,9 @@ import Navbar from "./components/Navbar.tsx";
 import AdminRoute from "./components/AdminRoutes.tsx";
 
 import { useAppDispatch, useAppSelector } from "./reduxStore/cartHooks.ts";
-import { reset, setCartCount } from "./reduxStore/cartSlice.ts";
+import { setCartCount } from "./reduxStore/cartSlice.ts";
 import { setUserCart } from "./reduxStore/userCart.ts";
 import { setLoading } from "./reduxStore/loadingSlice.ts";
-import { clearUser } from "./reduxStore/user.ts";
 
 const App = () => {
   const userId = useAppSelector((state) => state.user.userId);
