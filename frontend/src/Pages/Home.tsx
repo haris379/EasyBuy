@@ -14,9 +14,9 @@ interface HomeProps {
 const Home = ({ loadCart }: HomeProps) => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
-  const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
-
+  
+  const userId = useAppSelector((state) => state.user.userId);
   const userCart: any = useAppSelector((state) => state.userCart.userCart);
   const loading = useAppSelector((state) => state.loadingSlice.loading);
 
