@@ -37,8 +37,9 @@ const App = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("userName");
     localStorage.removeItem("role");
-    setUserCart([]);
+    dispatch(setUserCart([]));
     dispatch(reset());
+    dispatch(setCartCount(0));
     setRole(null);
     navigate("/");
   };
