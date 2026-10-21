@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import api from "./api/axios.ts";
 
@@ -23,26 +23,13 @@ import { useAppDispatch, useAppSelector } from "./reduxStore/cartHooks.ts";
 import { reset, setCartCount } from "./reduxStore/cartSlice.ts";
 import { setUserCart } from "./reduxStore/userCart.ts";
 import { setLoading } from "./reduxStore/loadingSlice.ts";
+import { clearUser } from "./reduxStore/user.ts";
 
 const App = () => {
-  const userId = localStorage.getItem("userId");
-  const [role, setRole] = useState(localStorage.getItem("role"));
+  const userId = useAppSelector((state) => state.user.userId);
   const cartCount = useAppSelector((state) => state.cartCount.cartCount);
 
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  const handlelogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("role");
-    dispatch(setUserCart([]));
-    dispatch(reset());
-    dispatch(setCartCount(0));
-    setRole(null);
-    navigate("/");
-  };
 
   const loadCart = async () => {
     if (!userId) {
@@ -76,7 +63,7 @@ const App = () => {
 
   return (
     <>
-      <Navbar role={role} onlogout={handlelogout} loadCart={loadCart} />
+      <Navbar loadCart={loadCart} />
       <Routes>
         <Route path="/" element={<Home loadCart={loadCart} />} />
         <Route path="/signup" element={<Signup />} />

@@ -1,36 +1,37 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useAppSelector } from "../reduxStore/cartHooks";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
+import { reset, setCartCount } from "../reduxStore/cartSlice.ts";
+import { setUserCart } from "../reduxStore/userCart.ts";
+import { clearUser } from "../reduxStore/user.ts";
 
 interface NavbarProps {
   loadCart: () => void;
-  onlogout: () => void;
-  role: any;
+  // handlelogout: () => void;
 }
 
 const navBtn =
   "btn-primary whitespace-nowrap px-2 py-1.5 text-center text-[11px] sm:px-4 sm:py-2 sm:text-sm hover:cursor-pointer";
 
-const Navbar = ({ loadCart, onlogout, role }: NavbarProps) => {
-  const userId = localStorage.getItem("userId");
-  const userName = localStorage.getItem("userName");
-
+const Navbar = ({ loadCart }: NavbarProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const userId = useAppSelector((state) => state.user.userId);
+  const userName = useAppSelector((state) => state.user.userName);
+  const role = useAppSelector((state) => state.user.role);
   const cartCount = useAppSelector((state) => state.cartCount.cartCount);
 
-  useEffect(() => {
-    const handleAuthChange = () => {
-      const userId = localStorage.getItem("userId");
-      if (userId) {
-        loadCart();
-      }
-    };
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-    window.addEventListener("authChanged", handleAuthChange);
-    return () => {
-      window.removeEventListener("authChanged", handleAuthChange);
-    };
-  }, []);
+  const handlelogout = () => {
+    localStorage.removeItem("token");
+    dispatch(setUserCart([]));
+    dispatch(reset());
+    dispatch(setCartCount(0));
+    dispatch(clearUser());
+    navigate("/");
+  };
+
   useEffect(() => {
     loadCart();
   }, []);
@@ -84,7 +85,7 @@ const Navbar = ({ loadCart, onlogout, role }: NavbarProps) => {
             )}
 
             {userId ? (
-              <button onClick={onlogout} className={navBtn}>
+              <button onClick={handlelogout} className={navBtn}>
                 Logout
               </button>
             ) : (
@@ -143,7 +144,7 @@ const Navbar = ({ loadCart, onlogout, role }: NavbarProps) => {
               </>
             )}
             {userId ? (
-              <button onClick={onlogout} className={navBtn}>
+              <button onClick={handlelogout} className={navBtn}>
                 Logout
               </button>
             ) : (

@@ -7,6 +7,7 @@ import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
 
 import { setLoading } from "../reduxStore/loadingSlice";
+import { setUser } from "../reduxStore/user";
 import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
 
 interface FormObj {
@@ -43,9 +44,16 @@ const Login = () => {
     try {
       const response = await api.post("/auth/login", form);
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("userId", response.data.user.id);
-      localStorage.setItem("userName", response.data.user.name);
-      localStorage.setItem("role", response.data.user.role);
+      dispatch(
+        setUser({
+          userId: response.data.user.id,
+          userName: response.data.user.name,
+          role: response.data.user.role,
+        }),
+      );
+      // localStorage.setItem("userId", response.data.user.id);
+      // localStorage.setItem("userName", response.data.user.name);
+      // localStorage.setItem("role", response.data.user.role);
       navigate("/");
     } catch (error: any) {
       console.log(error);
