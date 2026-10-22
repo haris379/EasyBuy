@@ -6,8 +6,8 @@ import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
 
 import { setLoading } from "../reduxStore/loadingSlice";
-import { setUser } from "../reduxStore/user";
-import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
+import { setUser } from "../reduxStore/userSlice";
+import { useAppDispatch, useAppSelector } from "../reduxStore/reduxHooks";
 
 interface FormObj {
   password: string;

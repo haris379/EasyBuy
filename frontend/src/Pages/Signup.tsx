@@ -5,7 +5,7 @@ import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
 
 import { setLoading } from "../reduxStore/loadingSlice";
-import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
+import { useAppDispatch, useAppSelector } from "../reduxStore/reduxHooks";
 
 interface FormObj {
   name: string;

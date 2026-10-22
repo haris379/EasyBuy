@@ -4,7 +4,7 @@ import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
 
 import { increment } from "../reduxStore/cartSlice";
-import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
+import { useAppDispatch, useAppSelector } from "../reduxStore/reduxHooks.ts";
 import { setLoading } from "../reduxStore/loadingSlice.ts";
 
 interface HomeProps {

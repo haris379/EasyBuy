@@ -19,9 +19,9 @@ import ResendCode from "./Pages/ResendCode.tsx";
 import Navbar from "./components/Navbar.tsx";
 import AdminRoute from "./components/AdminRoutes.tsx";
 
-import { useAppDispatch, useAppSelector } from "./reduxStore/cartHooks.ts";
+import { useAppDispatch, useAppSelector } from "./reduxStore/reduxHooks.ts";
 import { setCartCount } from "./reduxStore/cartSlice.ts";
-import { setUserCart } from "./reduxStore/userCart.ts";
+import { setUserCart } from "./reduxStore/userCartSlice.ts";
 import { setLoading } from "./reduxStore/loadingSlice.ts";
 
 const App = () => {

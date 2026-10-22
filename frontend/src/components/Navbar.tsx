@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
+import { useAppDispatch, useAppSelector } from "../reduxStore/reduxHooks.ts";
 import { reset, setCartCount } from "../reduxStore/cartSlice.ts";
-import { setUserCart } from "../reduxStore/userCart.ts";
-import { clearUser } from "../reduxStore/user.ts";
+import { setUserCart } from "../reduxStore/userCartSlice.ts";
+import { clearUser } from "../reduxStore/userSlice.ts";
 
 interface NavbarProps {
   loadCart: () => void;

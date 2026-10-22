@@ -7,7 +7,7 @@ import api from "../api/axios";
 import LoadingBar from "../components/LoadingBar";
 
 import { setLoading } from "../reduxStore/loadingSlice";
-import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks";
+import { useAppDispatch, useAppSelector } from "../reduxStore/reduxHooks";
 
 const inputStyle =
   "w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg outline-none transition focus:border-[#5E162F] focus:ring-2 focus:ring-[#5E162F]/20";

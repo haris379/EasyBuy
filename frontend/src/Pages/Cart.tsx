@@ -7,19 +7,18 @@ import LoadingBar from "../components/LoadingBar";
 import IncrementBtn from "../components/IncrementBtn";
 import DecrementBtn from "../components/DecrementBtn";
 
-import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks.ts";
+import { useAppDispatch, useAppSelector } from "../reduxStore/reduxHooks.ts";
 import { increment, decrement, setCartCount } from "../reduxStore/cartSlice.ts";
-import { setUserCart } from "../reduxStore/userCart.ts";
+import { setUserCart } from "../reduxStore/userCartSlice.ts";
 import { setLoading } from "../reduxStore/loadingSlice.ts";
-import { setTotal } from "../reduxStore/userCart.ts";
+import { setTotal } from "../reduxStore/userCartSlice.ts";
 
 interface CartProps {
   loadCart: () => void;
 }
 
 const Cart = ({ loadCart }: CartProps) => {
-  const userId = localStorage.getItem("userId");
-
+  const userId = useAppSelector((state) => state.user.userId);
   const cartCount = useAppSelector((state) => state.cartCount.cartCount);
   const userCart: any = useAppSelector((state) => state.userCart.userCart);
   const loading = useAppSelector((state) => state.loadingSlice.loading);
@@ -42,7 +41,6 @@ const Cart = ({ loadCart }: CartProps) => {
       }
       return item;
     });
-    console.log(updatedCart);
     dispatch(increment());
     dispatch(setUserCart(updatedCart));
     try {
@@ -143,7 +141,7 @@ const Cart = ({ loadCart }: CartProps) => {
     }
     loadCart();
   }, []);
-  
+
   useEffect(() => {
     dispatch(
       setTotal(
@@ -196,7 +194,6 @@ const Cart = ({ loadCart }: CartProps) => {
                         />
 
                         <div className="flex flex-col">
-                          {/* Product Price and Title  */}
                           <div className="min-w-0">
                             <h2 className="font-semibold text-ink truncate">
                               {item.productId.title}
@@ -206,7 +203,6 @@ const Cart = ({ loadCart }: CartProps) => {
                             </p>
                           </div>
 
-                          {/* Buttons  */}
                           <div className="h-7 w-fit border border-line rounded-md mt-2">
                             <div className="flex h-full items-center px-2 gap-3">
                               <button

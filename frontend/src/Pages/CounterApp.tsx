@@ -7,7 +7,7 @@ import ProfileCard from "../components/ProfileCard.tsx";
 import LoadingBar from "../components/LoadingBar.tsx";
 
 import { setLoading } from "../reduxStore/loadingSlice.ts";
-import { useAppDispatch, useAppSelector } from "../reduxStore/cartHooks.ts";
+import { useAppDispatch, useAppSelector } from "../reduxStore/reduxHooks.ts";
 interface CounterObject {
   id: number | string;
   value: number;
